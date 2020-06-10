@@ -26,7 +26,7 @@ module.exports = function() {
                     github.verifySignature({
                         payload: JSON.stringify(ctx.request.body),//convert payload to JSON format
                         // the registered app must have a secret set, the secret is used to verify that webhooks are sent by Github
-            	        secret: config.githubWebhookSecret,
+            	        secret: config.githubPrivateKey,
             	        signature: ctx.headers["x-hub-signature"] //Every event that Github sends includes a request header called "x-hub-signature"
                     }),
                     401,
