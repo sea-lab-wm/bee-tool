@@ -102,6 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+<<<<<<< HEAD
 node_modules
 *.swp
 *.env
@@ -110,3 +111,5 @@ node_modules
 .idea
 bug-report-checker.private-key.pem
 
+=======
+>>>>>>> 23ce4c26d3ae3afabff1d07545fee38b94703418
