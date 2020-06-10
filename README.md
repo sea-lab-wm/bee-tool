@@ -43,6 +43,7 @@ npm start
 ```
 
 ## References
+ - The approach behind BEE and evaluation is described in this  <a href="https://developer.github.com/apps/building-github-apps/"> paper <a>. 
 
 
-## Disclaimers
+
