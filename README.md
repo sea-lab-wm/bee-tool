@@ -11,9 +11,38 @@ Using **BEE** is really simple. Once you've installed it in your repository, sim
   <img src="https://i.ibb.co/nmwLS4K/bug-report3.png?s=500&v=400" width="300">
 </p>
 
-## Set up
+## Configuring for your project
+Prerequisites:
+ - you need to install nodejs-v8.3.x. and npm to compile/install dependencies
+ - you need to register a Github App of your own and install it on any repositories
 
-## License
+Set up:
+```sh
+git clone https://github.com/ysong10/bee-tool.git bee-tool
+cd bee-tool
+
+# Install dependencies
+npm install
+
+# run server
+npm start
+```
+ Environment variables:
+ - create a .env file in the src folder:
+ ```
+GITHUB_APP_ID = xxxxx
+GITHUB_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----
+...
+HkVN9...
+...
+-----BEGIN RSA PRIVATE KEY-----"
+GITHUB_WEBHOOK_SECRET = xxx (optional)
+PORT = xxxx
+```
+Note: refer <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
 
 
+## References
 
+
+## Disclaimers
