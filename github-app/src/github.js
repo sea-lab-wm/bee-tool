@@ -7,13 +7,6 @@ const config = require("./config");
 const fs = require("fs");
 
 
-// GitHub uses the WEBHOOK_SECRET, registered to the GitHub App, to
-// create the hash signature sent in the `X-HUB-Signature` header of each
-// webhook. This code computes the expected hash signature and compares it to
-// the signature sent in the `X-HUB-Signature` header. If they don't match,
-// this request is an attack, and you should reject it. GitHub uses the HMAC
-// hexdigest to compute the signature. The `X-HUB-Signature` looks something
-// like this: "sha1=123456".cd bug
 exports.verifySignature = async ({payload, secret, signature}) => {
     const digest = crypto.createHmac("sha1", secret).update(payload).digest("hex");
     const newCreatedSignature  = `sha1=${digest}`;
