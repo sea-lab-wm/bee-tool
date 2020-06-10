@@ -1,0 +1,57 @@
+{
+  "name": "bug_report_checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ysong10/bug_report_checker.git"
+  },
+  "author": "Yang Song",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ysong10/bug_report_checker/issues"
+  },
+  "homepage": "https://github.com/ysong10/bug_report_checker#readme",
+  "dependencies": {
+    "corenlp": "^1.5.2",
+    "dotenv": "^8.2.0",
+    "event-stream": "^4.0.1",
+    "fasttext": "^0.2.3",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-route": "^3.2.0",
+    "n-readlines": "^1.0.0",
+    "natural": "^0.6.1",
+    "nodemon": "^1.18.7",
+    "object-hash": "^1.3.0",
+    "properties-reader": "^2.0.0",
+    "request": "^2.88.2",
+    "sentence-tokenizer": "^1.0.1",
+    "sleep": "^6.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "JSONStream": "^1.3.5",
+    "base64url": "^3.0.1",
+    "big-json": "^3.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-jest": "^23.7.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "line-reader": "^0.4.0",
+    "prettier": "^1.19.1",
+    "supertest": "^4.0.2",
+    "jest": "^23.6.0",
+    "ws": "3.3.2"
+  }
+}
