@@ -7,9 +7,7 @@
 
 ## Usage
 Using **BEE** is really simple. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments: 
-<p align="center">
-  <img src="https://i.ibb.co/nmwLS4K/bug-report3.png?s=500&v=400" width="300">
-</p>
+![](file:///Users/yangsong/Downloads/ezgif.com-optimize.gif)
 
 ## Configuring for your project
 Prerequisites:
