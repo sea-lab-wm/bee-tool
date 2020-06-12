@@ -24,9 +24,6 @@ Then, clone the repo:
 ```sh
 git clone https://github.com/ysong10/bee-tool.git bee-tool
 cd bee-tool
-
-# Install dependencies
-npm install
 ```
 Create a .env file in the src folder and set the right environment variables as <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
  ```
@@ -49,6 +46,9 @@ CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can 
 
 Now, install app dependencies and run it:
 ```sh
+# Install dependencies
+npm install
+
 # run server
 npm start
 ```
