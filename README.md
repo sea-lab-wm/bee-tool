@@ -36,6 +36,14 @@ PORT = xxxx
 Note: refer <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
 
 Set up:
+download Stanford CoreNLP at <a href="https://stanfordnlp.github.io/CoreNLP/download.html"> official website.</a>.
+To connect your Nodejs application to Stanford CoreNLP
+```sh
+## Run the server using all jars in the current directory (e.g., the CoreNLP home directory), 
+java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
+```
+CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can also opt to setup the connection differently.
+
 ```sh
 git clone https://github.com/ysong10/bee-tool.git bee-tool
 cd bee-tool
@@ -46,13 +54,7 @@ npm install
 # run server
 npm start
 ```
-Before you start the server, you also need to download Stanford CoreNLP at <a href="https://stanfordnlp.github.io/CoreNLP/download.html"> official website.</a>.
-To connect your Nodejs application to Stanford CoreNLP
-```sh
-## Run the server using all jars in the current directory (e.g., the CoreNLP home directory), 
-java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
-```
-CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can also opt to setup the connection differently:
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-darkgreen.svg)](https://opensource.org/licenses/MIT)
 [![Install App](https://img.shields.io/badge/GitHub%20Marketplace-Install%20App-blueviolet.svg?logo=github)](https://github.com/apps/bee-tool)
 
