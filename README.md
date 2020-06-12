@@ -15,7 +15,7 @@ Automatically labeling bug reports can make your report more clear and readable 
 ## How do I use BEE?
 Using **BEE** is really simple. Add to your repository now ! <a href="https://github.com/apps/bee-tool/"> bee-tool</a>. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments.
 
-## How to configure for my project?
+## How do I run the code?
 Prerequisites:
  - you need to install nodejs-v8.3.x. and npm to compile/install dependencies
  - you need to register a Github App of your own and install it on any repositories
