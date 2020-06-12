@@ -36,7 +36,8 @@ PORT = xxxx
 Note: refer <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
 
 Set up:
-download Stanford CoreNLP at <a href="https://stanfordnlp.github.io/CoreNLP/download.html"> official website.</a>.
+
+download Stanford CoreNLP at <a href="https://stanfordnlp.github.io/CoreNLP/download.html"> official website.</a>
 To connect your Nodejs application to Stanford CoreNLP
 ```sh
 ## Run the server using all jars in the current directory (e.g., the CoreNLP home directory), 
