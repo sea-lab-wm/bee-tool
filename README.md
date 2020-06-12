@@ -22,7 +22,7 @@ Prerequisites:
 
 
 Environment variables:
- - create a .env file in the src folder:
+ - create a .env file in the src folder based on your app:
  ```
 GITHUB_APP_ID = xxxxx
 GITHUB_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----
