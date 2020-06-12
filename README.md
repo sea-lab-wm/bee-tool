@@ -43,7 +43,7 @@ Note: refer <a href="https://developer.github.com/apps/building-github-apps/"> B
 
 Download Stanford CoreNLP at <a href="https://stanfordnlp.github.io/CoreNLP/download.html"> download section</a>. To connect your Nodejs application to Stanford CoreNLP:
 ```sh
-## Run the server using all jars in the current directory (e.g., the CoreNLP home directory), 
+# Run the server using all jars in the current directory (e.g., the CoreNLP home directory), 
 java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
 ```
 CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can also opt to setup the connection differently.
