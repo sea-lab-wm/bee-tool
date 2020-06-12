@@ -7,7 +7,7 @@
 ## What is BEE?
 BEE is a Github app that can structure and analyze bug reports using machine learning techniques. BEE can automatically label your issue as either bug, question or enhancement. If this issue is labeled as a bug report, BEE labels each sentence as _obsesrved behavior_ <img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, _expected behavior_ <img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or _steps to reproduce_ <img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">. BEE will also alert you if there is something missing in your bug report. Here is a screen recording of the BEE in action:
 
-![](https://j.gifs.com/OMvnKB.gif)
+![](https://j.gifs.com/k8xn3K.gif)
 
 ## What can I do with BEE?
 Automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Also, BEE can alert you if your bug report is missing key points. A clear and complete bug report can make engineers love you :grin:.
