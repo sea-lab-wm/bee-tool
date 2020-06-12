@@ -46,7 +46,14 @@ npm install
 # run server
 npm start
 ```
+You also need to download Stanford CoreNLP at <a href="https://stanfordnlp.github.io/CoreNLP/download.html"> official website.</a>.
+To connect your Nodejs app to Stanford CoreNLP
+```sh
+#CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can also opt to setup the connection differently:
+java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
+```
 
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-darkgreen.svg)](https://opensource.org/licenses/MIT)
+[![Install App](https://img.shields.io/badge/GitHub%20Marketplace-Install%20App-blueviolet.svg?logo=github)](https://github.com/apps/bee-tool)
 
 
