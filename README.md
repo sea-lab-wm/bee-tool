@@ -20,7 +20,7 @@ Prerequisites:
  - you need to install nodejs-v8.3.x. and npm to compile/install dependencies
  - you need to register a Github App of your own and install it on any repositories
 
-Set up:
+Then, clone the repo:
 ```sh
 git clone https://github.com/ysong10/bee-tool.git bee-tool
 cd bee-tool
@@ -28,7 +28,7 @@ cd bee-tool
 # Install dependencies
 npm install
 ```
-Create a .env file in the src folder based on your app:
+Create a .env file in the src folder and set the right environment variables as <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
  ```
 GITHUB_APP_ID = xxxxx
 GITHUB_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----
@@ -39,7 +39,6 @@ HkVN9...
 GITHUB_WEBHOOK_SECRET = xxx (optional)
 PORT = xxxx
 ```
-Note: refer <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
 
 Download <a href="https://stanfordnlp.github.io/CoreNLP/history.html"> Stanford CoreNLP 3.9.0 </a>. To connect your Nodejs application to Stanford CoreNLP:
 ```sh
@@ -48,7 +47,7 @@ java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -t
 ```
 CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can also opt to setup the connection differently.
 
-Finally
+Now, install app dependencies and run it:
 ```sh
 # run server
 npm start
