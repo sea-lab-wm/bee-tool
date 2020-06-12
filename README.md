@@ -6,13 +6,12 @@
 </p>
 
 ## What is BEE?
-BEE is a Github app that can help developers structure and analyze bug reports. BEE utilizes machine learning to (i) detect the structure of bug descriptions by automatically labeling each sentencethat corresponds to OB, EB, or S2R; and(ii) alert reporters whentheir bug reports are missing important information. 
+BEE is a Github app that can help developers structure and analyze bug reports using machine learning techniques. BEE can automatically label your issue as either bug, question or enhancement. If this issue is labeled as a bug report, BEE labels each sentence as Obsesrved behavior<img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, Expected behavior<img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or Steps to reproduce<img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">. BEE will also alert you if there is something missing in your bug report.
 
 ![](https://j.gifs.com/QnxpvG.gif)
 
 ## What can I do with BEE?
-Automatically labeling bug reports can help you 
-BEE can automatically label your issue as either bug, question or enhancement. If this issue is labeled as a bug report, BEE labels each sentence as Obsesrved behavior<img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, Expected behavior<img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or Steps to reproduce<img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">. BEE will also alert you if there is something missing in your bug report. 
+First, automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Second, BEE can alert you if your bug report is missing key points. A clear and complete bug report can make engineers love you.
 
 ## How do I use BEE?
 Using **BEE** is really simple. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments:
