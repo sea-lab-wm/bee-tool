@@ -9,12 +9,12 @@ const exec = require('child_process').exec;
 const { Classifier } = require("fasttext");
 const Tokenizer = require('sentence-tokenizer');
 const tokenizer = new Tokenizer('Chuck');
-const classifier = new Classifier("../model.bin");
+const classifier = new Classifier("../model/model_ticket_tagger.bin");
 const map = new Map();
 
 try {
     // read contents of the file
-    const data = fs.readFileSync('../dict.txt', 'UTF-8');
+    const data = fs.readFileSync('../model/dict.txt', 'UTF-8');
     // split the contents by new line
     const lines = data.split(/\r?\n/);
     // print all lines
@@ -108,7 +108,7 @@ function emptySentence(){
 }
 function predict_OB(inputFile) {
     return new Promise ((resolve,reject) => {
-        exec("../svm_classify -v 1 input.dat ../model_OB.txt predictions_OB.txt", function(error,stdout,stderr) {
+        exec("../model/svm_classify -v 1 input.dat ../model/model_OB.txt predictions_OB.txt", function(error,stdout,stderr) {
             if (!error) {
                 const arrayOB = fs.readFileSync('predictions_OB.txt').toString().split("\n");
                 resolve(arrayOB);
@@ -120,7 +120,7 @@ function predict_OB(inputFile) {
 }
 function predict_EB(inputFile) {
     return new Promise ((resolve,reject) => {
-        exec("../svm_classify -v 1 input.dat ../model_EB.txt predictions_EB.txt", function(error,stdout,stderr) {
+        exec("../model/svm_classify -v 1 input.dat ../model/model_EB.txt predictions_EB.txt", function(error,stdout,stderr) {
             if (!error) {
                 const arrayEB = fs.readFileSync('predictions_EB.txt').toString().split("\n");
                 resolve(arrayEB);
@@ -132,7 +132,7 @@ function predict_EB(inputFile) {
 }
 function predict_SR(inputFile) {
     return new Promise ((resolve,reject) => {
-        exec("../svm_classify -v 1 input.dat ../model_SR.txt predictions_SR.txt", function(error,stdout,stderr) {
+        exec("../model/svm_classify -v 1 input.dat ../model/model_SR.txt predictions_SR.txt", function(error,stdout,stderr) {
             if (!error) {
                 const arraySR = fs.readFileSync('predictions_SR.txt').toString().split("\n");
                 resolve(arraySR);
