@@ -8,7 +8,7 @@
 ## Usage
 Using **BEE** is really simple. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments:
 
-![](https://j.gifs.com/ANLG8j.gif)
+![](https://j.gifs.com/QnxpvG.gif)
 
 ## Configuring for your project
 Prerequisites:
