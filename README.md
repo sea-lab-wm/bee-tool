@@ -34,7 +34,8 @@ GITHUB_WEBHOOK_SECRET = xxx (optional)
 PORT = xxxx
 ```
 Note: refer <a href="https://developer.github.com/apps/building-github-apps/"> Building GitHub Apps</a>
-## Set up:
+
+Set up:
 ```sh
 git clone https://github.com/ysong10/bee-tool.git bee-tool
 cd bee-tool
