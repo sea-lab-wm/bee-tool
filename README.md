@@ -48,6 +48,7 @@ java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -t
 ```
 CoreNLP connects by default via StanfordCoreNLPServer, using port 9000. You can also opt to setup the connection differently.
 
+Finally
 ```sh
 # run server
 npm start
