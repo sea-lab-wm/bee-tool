@@ -1,6 +1,5 @@
 <p align="center">
   <img src="https://i.ibb.co/6bTfSwp/bee-icon.png?s=128&v=4" width="64">
-  <h3 align="center">Add to your repository now: <a href="https://github.com/apps/bee-tool">bee[bot]</a></h3>
   <p align="center">BEE (Bug rEport analyzEr), a GitHub app for structuring and analyzing bug reports. <p> 
   </p>
 </p>
@@ -14,9 +13,9 @@ BEE is a Github app that can help developers structure and analyze bug reports u
 First, automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Second, BEE can alert you if your bug report is missing key points. A clear and complete bug report can make engineers love you.
 
 ## How do I use BEE?
-Using **BEE** is really simple. Add to your repository now ! :<a href="https://github.com/apps/bee-tool/"> bee-tool</a>. 
-Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments.
-## Configuring for your project
+Using **BEE** is really simple. Add to your repository now ! <a href="https://github.com/apps/bee-tool/"> bee-tool</a>. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments.
+
+## How to configure for my project?
 Prerequisites:
  - you need to install nodejs-v8.3.x. and npm to compile/install dependencies
  - you need to register a Github App of your own and install it on any repositories
@@ -46,7 +45,7 @@ npm install
 # run server
 npm start
 ```
-## How can I contribute to BEE?
+
 
 
 
