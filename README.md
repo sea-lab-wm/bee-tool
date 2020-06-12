@@ -10,7 +10,7 @@ BEE is a Github app that can structure and analyze bug reports using machine lea
 ![](https://j.gifs.com/QnxpvG.gif)
 
 ## What can I do with BEE?
-First, automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Second, BEE can alert you if your bug report is missing key points. A clear and complete bug report can make engineers love you.
+First, automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Second, BEE can alert you if your bug report is missing key points. A clear and complete bug report can make engineers love you :grin:.
 
 ## How do I use BEE?
 Using **BEE** is really simple. Add to your repository now ! <a href="https://github.com/apps/bee-tool/"> bee-tool</a>. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments.
