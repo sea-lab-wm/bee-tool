@@ -6,8 +6,9 @@
 </p>
 
 ## Usage
-Using **BEE** is really simple. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments: 
-![](file:///Users/yangsong/Downloads/ezgif.com-optimize.gif)
+Using **BEE** is really simple. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments:
+
+![](https://j.gifs.com/ANLG8j.gif)
 
 ## Configuring for your project
 Prerequisites:
