@@ -75,6 +75,7 @@ function generateInputVector(sent) {
                     array.push(Number(map.get(pos3tag)));
                 }
             }
+            let temp = "0";
             const uSet = new Set(array);
             let arr = Array.from(uSet);
             arr.sort(function (x, y) {
@@ -86,13 +87,15 @@ function generateInputVector(sent) {
                 }
                 return 0;
             });
-            console.log(arr);
 
-            let temp = "0";
-            for (i = 0; i < arr.length; i++) {
-                temp = temp.concat(" ", arr[i].toString(), ":", "1");
-                if (i === (arr.length - 1) && arr[i] < map.size){
-                    temp = temp.concat(" ",map.size.toString(), ":", "0");
+            if (arr.length === 0) {
+                temp = temp.concat(" ", map.size.toString(), ":", "0");
+            }else{
+                for (i = 0; i < arr.length; i++) {
+                    temp = temp.concat(" ", arr[i].toString(), ":", "1");
+                    if (i === (arr.length - 1) && arr[i] < map.size){
+                        temp = temp.concat(" ",map.size.toString(), ":", "0");
+                    }
                 }
             }
             return temp;
@@ -106,7 +109,8 @@ function emptySentence(){
     tmp = tmp.concat(" ",map.size.toString(), ":", "0");
     return tmp
 }
-function predict_OB(inputFile) {
+// return a promise object(predict_OB is actually an async function)
+function predict_OB() {
     return new Promise ((resolve,reject) => {
         exec("../model/svm_classify -v 1 input.dat ../model/model_OB.txt predictions_OB.txt", function(error,stdout,stderr) {
             if (!error) {
@@ -118,7 +122,7 @@ function predict_OB(inputFile) {
         });
     })
 }
-function predict_EB(inputFile) {
+function predict_EB() {
     return new Promise ((resolve,reject) => {
         exec("../model/svm_classify -v 1 input.dat ../model/model_EB.txt predictions_EB.txt", function(error,stdout,stderr) {
             if (!error) {
@@ -130,7 +134,7 @@ function predict_EB(inputFile) {
         });
     })
 }
-function predict_SR(inputFile) {
+function predict_SR() {
     return new Promise ((resolve,reject) => {
         exec("../model/svm_classify -v 1 input.dat ../model/model_SR.txt predictions_SR.txt", function(error,stdout,stderr) {
             if (!error) {
@@ -261,14 +265,12 @@ async function getComments(body,title, username){
             n = n + 1;
         }
     }
-    let arrayOB = await predict_OB('input.dat')
-    let arrayEB = await predict_EB('input.dat')
-    let arraySR = await predict_SR('input.dat')
+    const[arrayOB, arrayEB, arraySR ] = await Promise.all([predict_OB(), predict_EB(), predict_SR() ]);
+
     let comment1 = "";
     let comment2 = "";
     comment2 = comment2 + "\n**Title:** " + title ;
 
-    //console.log(gNum);
     let k = 0;
     while(k < gNum){
         if (k === 0){
@@ -368,41 +370,95 @@ async function getComments(body,title, username){
         comment1 = comment1 + "```diff" + "\n";
         if(OB === 0 && EB !== 0 && SR!==0 ){
             comment1 = comment1 + "- The system's observed behavior (OB) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         }
         if(EB === 0 && OB !== 0 && SR !== 0) {
             comment1 = comment1 + "- The system's expected behavior (EB) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         }
         if(SR === 0 && EB !== 0 && OB !== 0){
             comment1 = comment1 + "- The system's steps to reproduce (S2R) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         }
         if(OB === 0 && EB === 0 && SR !== 0 ){
             comment1 = comment1 + "- The system's observed behavior (OB) and expected behavior(EB) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         }
         if(EB === 0 && OB !== 0 && SR === 0) {
             comment1 = comment1 + "- The system's expected behavior (EB) and steps to reproduce (S2R) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         } 
         if(SR === 0 && EB !== 0 && OB === 0){
             comment1 = comment1 + "- The system's observed behavior (OB) and steps to reproduce (S2R) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         }
         if(SR === 0 && EB === 0 && OB === 0){
             comment1 = comment1 + "- The system's observed behavior (OB), expected behavior (EB), and steps to reproduce (S2R) might not have been provided!" + "\n";
-            comment1 = comment1 + "```\n";
-            comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
         }
+        comment1 = comment1 + "```\n";
+        comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
     }
     return [OB, EB, SR, comment1, comment2]
 
 }
 exports.getComments = getComments;
+
+async function getResponse(api_body){
+    const inputFile = fs.createWriteStream('input.dat', {
+        flags: 'a'
+    });
+    let map = new Map();
+    let gNum = 0;
+    map.set(gNum,api_title);
+    gNum = gNum + 1;
+    tokenizer.setEntry(api_body);
+    for (let i in tokenizer.getSentences()) {
+        let sent = tokenizer.getSentences()[i];
+        map.set(gNum, sent);
+        gNum  = gNum + 1;
+        sent = new nlp.simple.Sentence(sent);
+        let t = await generateInputVector(sent);
+        inputFile.write(t);
+        inputFile.write('\n');
+    }
+
+    const[arrayOB, arrayEB, arraySR ] = await Promise.all([predict_OB(), predict_EB(), predict_SR() ])
+
+    fs.unlink('predictions_OB.txt', (err) => {
+        if (err) throw err;
+        console.log('predictions_EB.txt was deleted');
+    });
+    fs.unlink('predictions_EB.txt', (err) => {
+        if (err) throw err;
+        console.log('predictions_EB.txt was deleted');
+    });
+    fs.unlink('predictions_SR.txt', (err) => {
+        if (err) throw err;
+        console.log('predictions_SR.txt was deleted');
+    });
+    fs.unlink('input.dat', (err) => {
+        if (err) throw err;
+        console.log('input.dat was deleted');
+    });
+
+    let data  = {
+        code: 200,
+        status: 'success',
+        bug_report: []
+    };
+
+    let k = 0;
+    while(k < gNum){
+        let obj_s = [];
+        if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
+            obj_s.push("OB");
+        }
+        if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
+            obj_s.push("EB");
+        }
+        if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
+            obj_s.push("SR");
+        }
+        data.bug_report[k] = {
+            text: map.get(k),
+            labels: obj_s
+        };
+        k = k + 1;
+    }
+    return data;
+}
+exports.getResponse = getResponse;
