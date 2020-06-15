@@ -7,9 +7,11 @@
 [![Install App](https://img.shields.io/badge/GitHub%20Marketplace-Install%20App-blueviolet.svg?logo=github)](https://github.com/apps/bee-tool)
 
 ## What is BEE?
-BEE is a Github app that automatically analyzes user-written bug reports and provides feedback to reporters and developers about the system's _obsesrved behavior_ <img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, _expected behavior_ <img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or _steps to reproduce_ <img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">.
+BEE is a Github app that automatically analyzes user-written bug reports and provides feedback to reporters and developers about the system's _obsesrved behavior_ <img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, _expected behavior_ <img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or _steps to reproduce_ <img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">. BEE utilizes meaching learning techniques to (1) detect if an issue describes a bug, an enhancement, or a question, and identify the structure of bug descriptions by automatically labeling the sentences that correspond to the OB, EB, or S2R; and (ii) detect when bug reports fail to provide these elements. Bee is integrated with GitHub and offers a public web API that researchers can use to investigate bug management tasks based on bug reports.
 
-EE can automatically label your issue as either bug, question or enhancement. If this issue is labeled as a bug report, BEE labels each sentence as . BEE will also alert you if there is something missing in your bug report. Here is a screen recording of the BEE in action:
+
+EE can automatically label your issue as either bug, question or enhancement.
+If this issue is labeled as a bug report, BEE labels each sentence as . BEE will also alert you if there is something missing in your bug report. Here is a screen recording of the BEE in action:
 
 ![](https://github.com/ysong10/bee-tool/blob/master/bee-tool.gif)
 
