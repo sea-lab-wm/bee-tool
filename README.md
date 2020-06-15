@@ -1,7 +1,8 @@
 <p align="center">
-  <img src="https://i.ibb.co/6bTfSwp/bee-icon.png?s=128&v=4" width="100"> <img src= "https://i.ibb.co/BgSyBhY/bee-tool.png" width="100">
-  <p align="center">  BEE(Bug rEport analyzEr)</p>
+  <img src="https://i.ibb.co/6bTfSwp/bee-icon.png?s=128&v=4" width="100">
+  <p align="center"> <img src= "https://i.ibb.co/TbxL22w/bee-tool.png" width="300"></p>
 </p>
+BEE(Bug rEport analyzEr)
 
 ## What is BEE?
 BEE is a Github app that can structure and analyze bug reports using machine learning techniques. BEE can automatically label your issue as either bug, question or enhancement. If this issue is labeled as a bug report, BEE labels each sentence as _obsesrved behavior_ <img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, _expected behavior_ <img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or _steps to reproduce_ <img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">. BEE will also alert you if there is something missing in your bug report. Here is a screen recording of the BEE in action:
