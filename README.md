@@ -55,7 +55,7 @@ npm install
 # run server
 npm start
 ```
-## How do I contribute to bee?
+## How do I contribute to BEE?
 
 
 
