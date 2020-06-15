@@ -45,18 +45,15 @@ module.exports = function() {
                     );
 
                     if (similarity > 0) {
-                        /* update label */
+                        /* update label */rm
                         await github.setLabels({ url:url, accessToken, prediction });
                     }
                     if (prediction === "bug"){
                         const [OB, EB, SR, comment1, comment2] = await classifier.getComments(body,title,username);
-                        console.log(comment1);
-                        console.log(comment2);
                         if(OB === 0 || EB === 0 || SR === 0 ){
                             await github.setComments1({ url: url, accessToken, comment1})
                             sleep.sleep(1);
                             await github.setAssignees({ url: url, accessToken,username})
-                            //sleep.sleep(1);
                             await github.setLabel2({ url: url, accessToken});
                             sleep.sleep(1);
                             await github.setComments2({ url: url, accessToken,comment2});
@@ -68,8 +65,21 @@ module.exports = function() {
                     }
                 }
                 ctx.status = 200;
+            })
+    )
+    app.use(
+        post(
+            "/api",  async ctx => {
+                const api_body = ctx.request.body["text"];
+                try {
+                    const data = await classifier.getResponse(api_body);
+                    ctx.response.type = 'application/json';
+                    ctx.response.body = JSON.stringify(data);
+                }catch(err){
+                    ctx.throw(500);
+                }
             }
-            )
+        )
     )
     return app;
 };
