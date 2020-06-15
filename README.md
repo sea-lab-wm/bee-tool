@@ -22,6 +22,8 @@ Using **BEE** is really simple. Add to your repository now ! <a href="https://gi
  3. Bee assigns the issue to the reporter and tags the issue with the label info-needed.
  4. If all the three elements are provided by the user, Bee makes a comment indicating the bug report appears to be complete.
  5. Finally, Bee provides additional feedback by structuring the bug description which contains the bug title and description as provided in the original issue (with the same format), but with the sentences labeled as OB , EB , or S2R.
+
+Besides, Bee offers a public web API for the automated identification of the OB, EB, and S2R in textual documents. Users can send API requests that contain any piece of text. All data is sent and received as JSON. BEE  parses the text into sentences and returns them to the user, each one marked as OB, EB, and/or S2R in a JSON file.
 ## How does BEE work?
  - technologies
  
