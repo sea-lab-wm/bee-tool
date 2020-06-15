@@ -18,9 +18,10 @@ From the information reporters provide in bug reports, the system’s _observed 
 ## How do I use BEE?
 Using **BEE** is really simple. Add to your repository now ! <a href="https://github.com/apps/bee-tool/"> bee-tool</a>. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue. 
  1. the first step of the tool, right after an issue is submitted, is to automatically check if the issue describes a bug, as opposed to a feature, enhancement, or question. If the issue is classified as bug report, Bee tags the issue with the label "bug" and proceeds with following analysis of the bug report, otherwise, BEE would not proceed the following analysis.
- 2. Bee analyzes the title and description of a bug report, focusing on the OB, EB, S2R. Bee can detect when any of these elements is not provided by the reporter. In that case, Bee makes a comment in the issue, alerting the reporter about the missing information and asking her to provide the information. 
- 3. Bee assigns the issue to the reporter and tags the issue with the label info-needed. This feedback encourages reporters to provide the information needed by the developers. If all the three elements are provided by the user, Bee makes a comment indicating the bug report appears to be complete.
-
+ 2. Bee analyzes the title and description of a bug report, focusing on the OB, EB, S2R. Bee can detect when any of these elements is not provided by the reporter. In that case, Bee makes a comment in the issue, alerting the reporter about the missing information and asking him/her to provide the information. 
+ 3. Bee assigns the issue to the reporter and tags the issue with the label info-needed.
+ 4. If all the three elements are provided by the user, Bee makes a comment indicating the bug report appears to be complete.
+ 5. Finally, Bee provides additional feedback by structuring the bug description which contains the bug title and description as provided in the original issue (with the same format), but with the sentences labeled as OB , EB , or S2R.
 ## How does BEE work?
  - technologies
  
