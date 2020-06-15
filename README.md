@@ -1,7 +1,6 @@
 <p align="center">
-  <img src="https://i.ibb.co/6bTfSwp/bee-icon.png?s=128&v=4" width="80"> <img src= "https://i.ibb.co/BgSyBhY/bee-tool.png" width="100">
-  <p align="center">BEE (Bug rEport analyzEr), a GitHub app for structuring and analyzing bug reports. <p> 
-  </p>
+  <img src="https://i.ibb.co/6bTfSwp/bee-icon.png?s=128&v=4" width="100"> <img src= "https://i.ibb.co/BgSyBhY/bee-tool.png" width="100">
+  <p align="center">  BEE(Bug rEport analyzEr)</p>
 </p>
 
 ## What is BEE?
