@@ -28,7 +28,6 @@ Besides, Bee offers a public web API for the automated identification of the OB,
  - Technologies
    - **Issue classification**  is based on <a href="https://fasttext.cc/"> fastText </a>.  The model is a multi-class linear neural model that receives the set of n-grams extracted from the issue title and description.
    - **Sentence classification**  Bee extracts {1,2,3}-grams and {1,2,3}-POS tags that are extracted from each sentence using tokenization, lemmatization, and POS tagging via  <a href="https://stanfordnlp.github.io/CoreNLP/history.html"> Stanford CoreNLP library </a>. 
- https://fasttext.cc/
  - Classification models 
  
  - Architecture
