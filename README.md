@@ -25,11 +25,13 @@ Using **BEE** is really simple. Add to your repository now ! <a href="https://gi
 
 Besides, Bee offers a public web API for the automated identification of the OB, EB, and S2R in textual documents. Users can send API requests that contain any piece of text. All data is sent and received as JSON. BEE  parses the text into sentences and returns them to the user, each one marked as OB, EB, and/or S2R in a JSON file.
 ## How does BEE work?
- - technologies
+ - Technologies
+  
+      ffdffd
  
- - classification models
+ - Classification models
  
- - architecture
+ - Architecture
 ## How do I run the code on my server?
 Prerequisites:
  - you need to install nodejs-v8.3.x. and npm to compile/install dependencies
