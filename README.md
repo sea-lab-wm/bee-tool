@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://i.ibb.co/6bTfSwp/bee-icon.png?s=128&v=4" width="100">
-  <p align="center"> <img src= "https://i.ibb.co/TbxL22w/bee-tool.png" width="300"></p>
+  <p align="center"> <img src= "https://i.ibb.co/tCLWKjk/bee-tool.png" width="300"></p>
 </p>
 BEE(Bug rEport analyzEr)
 
