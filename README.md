@@ -7,12 +7,17 @@
 [![Install App](https://img.shields.io/badge/GitHub%20Marketplace-Install%20App-blueviolet.svg?logo=github)](https://github.com/apps/bee-tool)
 
 ## What is BEE?
-BEE is a Github app that automatically analyzes user-written bug reports and provides feedback to reporters and developers about the system's _obsesrved behavior_ <img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, _expected behavior_ <img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or _steps to reproduce_ <img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) ">. BEE utilizes meaching learning techniques to (1) detect if an issue describes a bug, an enhancement, or a question, and then identify the structure of bug descriptions by automatically labeling the sentences that correspond to the OB, EB, or S2R; and (2) detect when bug reports fail to provide these elements. BEE adds comments and label to the bug report to alert reporters about missing elements so that provide the information timely. Bee is integrated with GitHub and offers a public web API that researchers can use to investigate bug management tasks based on bug reports. Here is a screen recording of the BEE in action:
+BEE is a Github app that automatically analyzes user-written bug reports and provides feedback to reporters and developers about the _obsesrved behavior_ <img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>, _expected behavior_ <img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>, or _steps to reproduce_ <img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R) "> in bug reports. BEE utilizes meaching learning techniques to (1) detect if an issue describes a bug, an enhancement, or a question. For bug reports, BEE can automatically identify the structure of bug descriptions by labeling the sentences that correspond to the OB, EB, or S2R; and (2) detect when bug reports fail to provide these elements. BEE adds comments and label to the bug report to alert reporters about missing elements so that they can provide the information timely. Bee is integrated with GitHub and offers a public web API that Finally, Bee offers a public web API for the automated identification of the OB, EB, and S2R in textual documents. Researchers and practitioners can send API requests containing any piece of text. Bee parses the text into sentences and returns them to the user, each one marked as OB, EB, and/or S2R. Here is a screen recording of the BEE in action:
 
-![](https://github.com/ysong10/bee-tool/blob/master/bee-tool.gif)
+![](https://github.com/ysong10/bee-tool/blob/master/bee-tool.gif)     
 
 ## Why do I need BEE?
-Automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Also, BEE can alert you if your bug report is missing key points. A clear and complete bug report can make engineers love you :grin:.
+
+
+
+
+
+Automatically labeling bug reports can make your report more clear and readable which help develpoers better understand and fix bugs. Also, BEE can alert you if your bug report is missing key points. 
 
 ## How do I use BEE?
 Using **BEE** is really simple. Add to your repository now ! <a href="https://github.com/apps/bee-tool/"> bee-tool</a>. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue and create new comments.
