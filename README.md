@@ -17,7 +17,7 @@ From the information reporters provide in bug reports, the system’s _observed 
 
 ## How do I use BEE?
 Using **BEE** is really simple. Add to your repository now ! <a href="https://github.com/apps/bee-tool/"> bee-tool</a>. Once you've installed it in your repository, simply commit an issue, BEE would analyze your issue. 
- 1. the first step of the tool, right after an issue is submitted, is to automatically check if the issue describes a bug, as opposed to a feature, enhancement, or question. If the issue is classified as bug report, Bee tags the issue with the label "bug" and proceeds with further analysis of the bug report. 
+ 1. the first step of the tool, right after an issue is submitted, is to automatically check if the issue describes a bug, as opposed to a feature, enhancement, or question. If the issue is classified as bug report, Bee tags the issue with the label "bug" and proceeds with following analysis of the bug report, otherwise, BEE would not proceed the following analysis.
  2. Bee analyzes the title and description of a bug report, focusing on the OB, EB, S2R. Bee can detect when any of these elements is not provided by the reporter. In that case, Bee makes a comment in the issue, alerting the reporter about the missing information and asking her to provide the information. 
  3. 
 ## How does BEE work?
