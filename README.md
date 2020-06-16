@@ -25,7 +25,7 @@ Using **BEE** is really simple. Add to your repository now ! <a href="https://gi
 
 Besides, Bee offers a public web API for the automated identification of the OB, EB, and S2R in textual documents. Users can send API requests that contain any piece of text. All data is sent and received as JSON. BEE  parses the text into sentences and returns them to the user, each one marked as OB, EB, and/or S2R in a JSON file.
 ## How does BEE work?
- - **Issue classification**  is based on <a href="https://fasttext.cc/"> fastText </a>.  The model is a multi-class linear neural model that receives the set of n-grams extracted from the issue title and description.
+ - **Issue classification**  For classifying issues, Bee relies on <a href="https://fasttext.cc/"> fastText </a>.  The model is a multi-class linear neural model that receives the set of n-grams extracted from the issue title and description.
  - **Sentence classification**  Bee extracts {1,2,3}-grams and {1,2,3}-POS tags that are extracted from each sentence using tokenization, lemmatization, and POS tagging via  <a href="https://stanfordnlp.github.io/CoreNLP/history.html"> Stanford CoreNLP library </a>. The input for each sentence is a binary vector that each component of the vector corresponds to an n-gram or a POS tag and takes the value one if the sentence contains the component, and the value zero otherwise. 
  - **Prediction models** we use linear Support Vector Machines (SVMs) for classifying the sentences. Bee implements three binary SVMs, one for each of the information types (OB, EB, S2R). 
  - **Architecture** Here is a sequence diagram of BEE:
