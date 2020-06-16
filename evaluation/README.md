@@ -1,5 +1,0 @@
-#Evaluation data:
-<<<<<<< master
-=======
-
->>>>>>> master
