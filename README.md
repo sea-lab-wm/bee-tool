@@ -69,8 +69,7 @@ npm install
 npm start
 ```
 ## How do I contribute to BEE?
-
-
+BEE is open source and the source code is hosted at GitHub. If you have an idea for a feature or enhancement, open an issue or a pull request. If you have questions, feel free to ask. 
 
 
 
