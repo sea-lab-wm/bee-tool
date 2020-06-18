@@ -1,5 +1,5 @@
 <p align="center"> <img src="designs/icons/bee-icon.png" width="150"></p>
-<p align="center"> <img src= "designs/icons/bee-name.png" width="300"></p>
+<p align="center"> <img src= "designs/icons/bee-name.PNG" width="300"></p>
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-darkgreen.svg)](https://opensource.org/licenses/MIT)
@@ -19,12 +19,12 @@ BEE focuses on analyzing three elements in bug reports (i.e., issues that descri
 BEE provides three main features:
 * Detect the type of an issue: a bug report, an enhancement, or a question
 * Detect when the OB, EB, and/or S2R are not provided by the user in their bug reports.
-* Structure bug descriptions, by identifying and labelling the sentences that describe the OB, EB, and/or S2R
+* Structure bug descriptions, by identifying and labeling the sentences that describe the OB, EB, and/or S2R
 
 BEE can be installed as GitHub app on any GitHub repository.
 BEE also offers a public web API for identification of the OB, EB, and S2R in any piece of text
 
-A video demostration of BEE can found <a href="https://www.youtube.com/watch?v=mdSyfthQ1ZI">here</a>.  Here is a screen recording of BEE in action:
+A video demonstration of BEE can found <a href="https://www.youtube.com/watch?v=mdSyfthQ1ZI">here</a>.
 
 <p align="center"> <img src="designs/images/bee-tool.gif" width="900"></p>
 
@@ -33,7 +33,7 @@ A video demostration of BEE can found <a href="https://www.youtube.com/watch?v=m
 BEE is meant to help users provide better bug reports, increase the productivity of developers, and help researchers in their investigations.
 
 As a developer, you can use BEE to:
-1. help you prioritize and manage incoming issues in your sofware projects
+1. help you prioritize and manage incoming issues in your software projects
 2. check whether bug reports are complete or incomplete
 3. prompt reporters to provide the missing information when bug reports are incomplete
 4. help you easily understand and spot the main elements in bug descriptions (the OB, EB, and S2R)
@@ -72,12 +72,12 @@ The main components of BEE are the following:
 * GitHub Controller: it handles the communication with GitHub and controls how other BEE components communicate. It handles
 * Web API Controller: it is the web interface of BEE's API.
 * Issue Classifier: it classifies a GitHub issue as a bug, an enhancement, or a question. The classifier is a multi-class linear neural model based on <a href="https://fasttext.cc/">fastText</a>.
-* Sentence Classifier: it classifies each sentence of bug report as OB, EB, or S2R (i.e., the sentence describes any of these elements. Three binary Support Vector Machines (SVMs) implemented on <a href="http://svmlight.joachims.org/">SVM <i><sup>light</sup></i></a> are used for sentence classification. The <a href="https://stanfordnlp.github.io/CoreNLP/history.html">Stanford CoreNLP</a> library is used to preprocess the bug report. 
+* Sentence Classifier: it classifies each sentence of a bug report as OB, EB, or S2R (i.e., the sentence describes any of these elements. Three binary Support Vector Machines (SVMs) implemented on <a href="http://svmlight.joachims.org/">SVM <i><sup>light</sup></i></a> are used for sentence classification. The <a href="https://stanfordnlp.github.io/CoreNLP/history.html">Stanford CoreNLP</a> library is used to preprocess the bug report. 
 * Missing Elements Detector: based on sentence classification, it detects if a bug report lacks the OB, EB, and S2R.
 
 ## How can I contribute to BEE?
 
-We are more than happy to receive your contributions (any kind of contributions). If you have an idea of a feature or enhancement, or if you found a bug, please open an issue (or a pull request). If you have questions, feel free to reach out to us: Yang Song (ysong10 at email.wm.edu) & Oscar Chaparro (oscarch at wm.edu)
+We are more than happy to receive your contributions (any kind of contributions). If you have an idea of a feature or enhancement, or if you found a bug, please open an issue (or a pull request). If you have questions, feel free to reach out to us: <a href="https://ysong10.github.io/">Yang Song</a> (ysong10 at email.wm.edu) & <a href="http://ojcchar.github.io/">Oscar Chaparro</a> (oscarch at wm.edu)
   
 ## How do I customize and run BEE on my server?
 
@@ -97,7 +97,7 @@ GITHUB_WEBHOOK_SECRET = xxx (optional)
 PORT = xxxx
 ```
 
-Download <a href="https://stanfordnlp.github.io/CoreNLP/history.html"> Stanford CoreNLP 3.9.0 </a>. Run the Stanford CoreNLP library:
+Download <a href="https://stanfordnlp.github.io/CoreNLP/history.html">Stanford CoreNLP 3.9.0</a>. Run the Stanford CoreNLP library:
 ```sh
 # Run the server using all jars in the current directory (e.g., the CoreNLP home directory), 
 java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
@@ -109,9 +109,12 @@ Install the app dependencies and run the app:
 # Install dependencies
 npm install
 
-# run server
+# Run the app server
 npm start
 ```
 
+You can use `ngrok` to expose your app to the Internet (see <a href="https://developer.github.com/webhooks/configuring/">this article</a> from information).
 
+# Who develops BEE?
 
+BEE is developed by <a href="https://ysong10.github.io/">Yang Song</a> and <a href="http://ojcchar.github.io/">Oscar Chaparro</a> from the College of William & Mary.
