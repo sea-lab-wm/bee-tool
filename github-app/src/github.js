@@ -51,23 +51,6 @@ exports.setComments1 = function({url, accessToken,comment1}){
         request(options, (error, response, body) => {
             if (!error) {
                 resolve(body);
-                //remove the prediction files and input files
-                fs.unlink('predictions_OB.txt', (err) => {
-                    if (err) throw err;
-                    console.log('predictions_EB.txt was deleted');
-                });
-                fs.unlink('predictions_EB.txt', (err) => {
-                    if (err) throw err;
-                    console.log('predictions_EB.txt was deleted');
-                });
-                fs.unlink('predictions_SR.txt', (err) => {
-                    if (err) throw err;
-                    console.log('predictions_SR.txt was deleted');
-                });
-                fs.unlink('input.dat', (err) => {
-                    if (err) throw err;
-                    console.log('input.dat was deleted');
-                });
             } else {
                 console.log(reject(error));
             }

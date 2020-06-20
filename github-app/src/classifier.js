@@ -9,12 +9,12 @@ const exec = require('child_process').exec;
 const { Classifier } = require("fasttext");
 const Tokenizer = require('sentence-tokenizer');
 const tokenizer = new Tokenizer('Chuck');
-const classifier = new Classifier("../model/model_ticket_tagger.bin");
+const classifier = new Classifier("../model.bin");
 const map = new Map();
 
 try {
     // read contents of the file
-    const data = fs.readFileSync('../model/dict.txt', 'UTF-8');
+    const data = fs.readFileSync('../dict.txt', 'UTF-8');
     // split the contents by new line
     const lines = data.split(/\r?\n/);
     // print all lines
@@ -87,15 +87,14 @@ function generateInputVector(sent) {
                 }
                 return 0;
             });
-
-            if (arr.length === 0) {
+            if(arr.length === 0) {
                 temp = temp.concat(" ", map.size.toString(), ":", "0");
             }else{
                 for (i = 0; i < arr.length; i++) {
-                    temp = temp.concat(" ", arr[i].toString(), ":", "1");
-                    if (i === (arr.length - 1) && arr[i] < map.size){
-                        temp = temp.concat(" ",map.size.toString(), ":", "0");
-                    }
+                   temp = temp.concat(" ", arr[i].toString(), ":", "1");
+                   if (i === (arr.length - 1) && arr[i] < map.size){
+                       temp = temp.concat(" ",map.size.toString(), ":", "0");
+                   }
                 }
             }
             return temp;
@@ -109,39 +108,48 @@ function emptySentence(){
     tmp = tmp.concat(" ",map.size.toString(), ":", "0");
     return tmp
 }
-// return a promise object(predict_OB is actually an async function)
-function predict_OB() {
+
+
+function predict_OB(preOB, fileName) {
     return new Promise ((resolve,reject) => {
-        exec("../model/svm_classify -v 1 input.dat ../model/model_OB.txt predictions_OB.txt", function(error,stdout,stderr) {
+        const command = "../svm_classify -v 1" + ' ' + fileName + ' ' + "../model_OB.txt" + ' ' + preOB;
+        exec(command, function(error,stdout,stderr) {
             if (!error) {
-                const arrayOB = fs.readFileSync('predictions_OB.txt').toString().split("\n");
+               
+                const arrayOB = fs.readFileSync(preOB).toString().split("\n");
                 resolve(arrayOB);
             } else{
-                console.log(reject(error))
+                  console.log('There was an error in the OB prediction: '+ error);
+                  reject(error);
             }
         });
     })
 }
-function predict_EB() {
+
+function predict_EB(preEB, fileName) {
     return new Promise ((resolve,reject) => {
-        exec("../model/svm_classify -v 1 input.dat ../model/model_EB.txt predictions_EB.txt", function(error,stdout,stderr) {
+        const command = "../svm_classify -v 1" + ' ' + fileName + ' ' + "../model_EB.txt" + ' ' + preEB;
+        exec(command, function(error,stdout,stderr) {
             if (!error) {
-                const arrayEB = fs.readFileSync('predictions_EB.txt').toString().split("\n");
+                const arrayEB = fs.readFileSync(preEB).toString().split("\n");
                 resolve(arrayEB);
             } else{
-                console.log(reject(error))
+                console.log('There was an error in the EB prediction: '+ error);
+                reject(error);
             }
         });
     })
 }
-function predict_SR() {
+function predict_SR(preSR, fileName) {
     return new Promise ((resolve,reject) => {
-        exec("../model/svm_classify -v 1 input.dat ../model/model_SR.txt predictions_SR.txt", function(error,stdout,stderr) {
+        const command = "../svm_classify -v 1"  + ' ' + fileName + ' ' + "../model_SR.txt" + ' ' + preSR;
+        exec(command, function(error,stdout,stderr) {
             if (!error) {
-                const arraySR = fs.readFileSync('predictions_SR.txt').toString().split("\n");
-                resolve(arraySR);
+                const arraySR = fs.readFileSync(preSR).toString().split("\n");
+               resolve(arraySR);
             }else{
-                console.log(reject(error))
+                console.log('There was an error in the S2R prediction: '+error);
+                reject(error);
             }
         });
     })
@@ -157,17 +165,21 @@ async function predict(text) {
     return [label.substring(9), value];
 }
 exports.predict = predict;
+let requestCounter = 1;
+async function getComments(body,title,username){
+    
+    requestCounter++;
+    const fileName = "input" + requestCounter + ".dat";
+    console.log("Req counter: " + requestCounter);
+    if (fs.existsSync(fileName)) {
+        fs.unlinkSync(fileName);
+    }
 
-async function getComments(body,title, username){
-    const inputFile = fs.createWriteStream('input.dat', {
-        flags: 'a'
-    });
     let OB = 0;
     let EB = 0;
     let SR = 0;
 
     let sentences = body.split("\r");
-    console.log(sentences);
     let symbolArray = [];
     for (let i in sentences) {
         if (sentences[i].includes('```')) {
@@ -178,7 +190,7 @@ async function getComments(body,title, username){
     let set_insertCode = [];
     let index_insertCode =[];
     let set_originalInsertCode = [];
-    console.log(symbolArray);
+   
 
     let j = 0;
     while (j < (symbolArray.length / 2)) {
@@ -198,8 +210,7 @@ async function getComments(body,title, username){
         j = j + 1;
         insertCode = insertCode.replace('```','');
         insertCode = insertCode.replace('```','');
-        console.log(insertCode);
-        console.log(originalInsertCode);
+     
         set_insertCode.push(insertCode);
         set_originalInsertCode.push(originalInsertCode);
     }
@@ -208,8 +219,7 @@ async function getComments(body,title, username){
     let n = 0;
     const input_title = new nlp.simple.Sentence(title);
     let t = await generateInputVector(input_title);
-    inputFile.write(t);
-    inputFile.write('\n');
+    fs.appendFileSync(fileName, t + "\n");
     map.set(gNum,title);
     gNum = gNum + 1;
     while(n < sentences.length) {
@@ -217,8 +227,7 @@ async function getComments(body,title, username){
             if (num % 2 === 0) {
                 const input = new nlp.simple.Sentence(set_insertCode[num/2]);
                 let t = await generateInputVector(input);
-                inputFile.write(t);
-                inputFile.write('\n');
+                fs.appendFileSync(fileName, t + "\n");
                 map.set(gNum,set_originalInsertCode[num/2]);
                 gNum = gNum + 1;
             }
@@ -252,213 +261,283 @@ async function getComments(body,title, username){
                 newsent = newsent.replace('- [ ]','');
                 const input = new nlp.simple.Sentence(newsent);
                 let t = await generateInputVector(input);
-                inputFile.write(t);
-                inputFile.write('\n');
+                fs.appendFileSync(fileName, t + "\n");
             }
             n = n + 1;
         }else {
             let t = emptySentence();
-            inputFile.write(t);
-            inputFile.write('\n');
+            fs.appendFileSync(fileName, t + "\n");
             map.set(gNum,"\n");
             gNum = gNum + 1;
             n = n + 1;
         }
     }
-    const[arrayOB, arrayEB, arraySR ] = await Promise.all([predict_OB(), predict_EB(), predict_SR() ]);
+    const preEB = "prediction" + requestCounter.toString() + "_EB.txt";
+    const preOB = "prediction" + requestCounter.toString() + "_OB.txt";
+    const preSR = "prediction" + requestCounter.toString() + "_SR.txt";
+    
+    try{
 
-    let comment1 = "";
-    let comment2 = "";
-    comment2 = comment2 + "\n**Title:** " + title ;
+       const[arrayOB, arrayEB, arraySR ] = await Promise.all([predict_OB(preOB, fileName), predict_EB(preEB, fileName), predict_SR(preSR, fileName)]);
+       let comment1 = "";
+       let comment2 = "";
+       comment2 = comment2 + "\n**Title:** " + title;
 
-    let k = 0;
-    while(k < gNum){
-        if (k === 0){
-            let line = "";
-            if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
-                let color = '<img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>';
-                line = line + " " + color;
-                OB = 1;
-            }
-            if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
-                let color = '<img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>';
-                line = line + " " + color;
-                EB = 1;
-            }
-            if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
-                let color = '<img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R)"/>';
-                line = line + " " + color;
-                SR = 1;
-            }
-            comment2 = comment2 + line;
-            comment2 = comment2 + "\n";
-            comment2 = comment2 + "\n";
-            if (body !== ''){
-                comment2 = comment2 + "**Description:**\n";
-            }
+       console.log('Prediction output: ' + arrayOB + "\n " + arrayEB + "\n" + arraySR); 
+       let k = 0;
+       while(k < gNum){
+           if (k === 0){
+               let line = "";
+               if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
+                   let color = '<img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>';
+                   line = line + " " + color;
+                   OB = 1;
+               }
+               if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
+                   let color = '<img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>';
+                   line = line + " " + color;
+                   EB = 1;
+               }
+               if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
+                   let color = '<img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R)"/>';
+                   line = line + " " + color;
+                   SR = 1;
+               }
+               comment2 = comment2 + line;
+               comment2 = comment2 + "\n";
+               comment2 = comment2 + "\n";
+               if (body !== ''){
+                   comment2 = comment2 + "**Description:**\n";
+               }
 
-            k = k + 1;
+               k = k + 1;
 
-        }
-        else{
-            let line =  map.get(k);
-            if (line.includes('```')){
-                let insertCodeColor = '';
-                let color1 = '';
-                let color2 = '';
-                let color3 = '';
-                if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
-                    color1 = "[OB]";
-                    insertCodeColor =  insertCodeColor  + color1;
-                    OB = 1;
-                }
-                if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
-                    color2 = "[EB]";
-                    insertCodeColor =  insertCodeColor  + color2;
-                    EB = 1;
-                }
-                if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
-                    color3 = "[SR]";
-                    insertCodeColor =  insertCodeColor  + color3;
-                    SR = 1;
-                }
-                if ( color1 === "[OB]"|| color2 === "[EB]" || color3 === "[SR]"){
-                    const n = line.lastIndexOf('```');
-                    const str2 = line.substring(0, n) + insertCodeColor + '\n' + line.substring(n);
-                    comment2 = comment2 + str2;
-                    k = k + 1;
+           }   
+           else{
+               let line =  map.get(k);
+               if (line.includes('```')){
+                   let insertCodeColor = '';
+                   let color1 = '';
+                   let color2 = '';
+                   let color3 = '';
+                   if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
+                       color1 = "[OB]";
+                       insertCodeColor =  insertCodeColor  + color1;
+                       OB = 1;
+                   }
+                   if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
+                       color2 = "[EB]";
+                       insertCodeColor =  insertCodeColor  + color2;
+                       EB = 1;
+                   }
+                   if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
+                       color3 = "[SR]";
+                       insertCodeColor =  insertCodeColor  + color3;
+                       SR = 1;
+                   }
+                   if ( color1 === "[OB]"|| color2 === "[EB]" || color3 === "[SR]"){
+                       const n = line.lastIndexOf('```');
+                       const str2 = line.substring(0, n) + insertCodeColor + '\n' + line.substring(n);
+                       comment2 = comment2 + str2;
+                       k = k + 1;
+                   }else{
+                       comment2 = comment2 + line;
+                       k = k + 1;
+                   }
+               }else if(line !== '\n'){
+                    if (/[a-zA-Z]/.test(line)) {
+                        if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
+                            let color = '<img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>';
+                            line = line + color ;
+                            OB = 1;
+                        }
+                        if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
+                            let color = '<img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>';
+                            line = line + color ;
+                            EB = 1;
+                        }
+                        if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
+                            let color = '<img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R)"/> ';
+                            line = line + color ;
+                            SR = 1;
+                        }
+                        comment2 = comment2 + line + ' ';
+                        k = k + 1;
+                    }else{
+                        comment2 = comment2 + line + ' ';
+                        k = k + 1;
+                    }
                 }else{
-                    comment2 = comment2 + line;
-                    k = k + 1;
+                   comment2 = comment2 + line;
+                   k = k + 1;
                 }
-            }else if(line !== '\n'){
-                if (/[a-zA-Z]/.test(line)) {
-                    if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
-                        let color = '<img src="https://i.ibb.co/1G7bXhB/ob2.png" width="14" title="Observed Behavior (OB)"/>';
-                        line = line + color + ' ';
-                        OB = 1;
-                    }
-                    if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
-                        let color = '<img src="https://i.ibb.co/mBgChsk/eb3.png" width="14" title="Expected Behavior (EB)"/>';
-                        line = line + color + ' ';
-                        EB = 1;
-                    }
-                    if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
-                        let color = '<img src="https://i.ibb.co/yWS7XhR/s2r2.png" width="14" title="Steps to Reproduce (S2R)"/> ';
-                        line = line + color + ' ';
-                        SR = 1;
-                    }
-                    comment2 = comment2 + line + ' ';
-                    k = k + 1;
-                }else{
-                    comment2 = comment2 + line + ' ';
-                    k = k + 1;
-                }
-            }else{
-                comment2 = comment2 + line;
-                k = k + 1;
-            }
-        }
-    }
+           }
+       }
     //comment2 = comment2 + "\n";
 
-    comment1 = comment1 + "**Quality assessment:**\n"
-    if(OB !== 0 && EB !==0  && SR!==0 ){
-        comment1 = comment1 + "The bug report appears to be complete!";
+       comment1 = comment1 + "**Quality assessment:**\n"
+       if(OB !== 0 && EB !==0  && SR!==0 ){
+           comment1 = comment1 + "The bug report appears to be complete!";
 
-    }else{
-        comment1 = comment1 + "```diff" + "\n";
-        if(OB === 0 && EB !== 0 && SR!==0 ){
-            comment1 = comment1 + "- The system's observed behavior (OB) might not have been provided!" + "\n";
-        }
-        if(EB === 0 && OB !== 0 && SR !== 0) {
-            comment1 = comment1 + "- The system's expected behavior (EB) might not have been provided!" + "\n";
-        }
-        if(SR === 0 && EB !== 0 && OB !== 0){
-            comment1 = comment1 + "- The system's steps to reproduce (S2R) might not have been provided!" + "\n";
-        }
-        if(OB === 0 && EB === 0 && SR !== 0 ){
-            comment1 = comment1 + "- The system's observed behavior (OB) and expected behavior(EB) might not have been provided!" + "\n";
-        }
-        if(EB === 0 && OB !== 0 && SR === 0) {
-            comment1 = comment1 + "- The system's expected behavior (EB) and steps to reproduce (S2R) might not have been provided!" + "\n";
-        } 
-        if(SR === 0 && EB !== 0 && OB === 0){
-            comment1 = comment1 + "- The system's observed behavior (OB) and steps to reproduce (S2R) might not have been provided!" + "\n";
-        }
-        if(SR === 0 && EB === 0 && OB === 0){
+       }else{
+           comment1 = comment1 + "```diff" + "\n";
+           if(OB === 0 && EB !== 0 && SR!==0 ){
+               comment1 = comment1 + "- The system's observed behavior (OB) might not have been provided!" + "\n";
+           }
+           if(EB === 0 && OB !== 0 && SR !== 0) {
+               comment1 = comment1 + "- The system's expected behavior (EB) might not have been provided!" + "\n";
+           }
+           if(SR === 0 && EB !== 0 && OB !== 0){
+               comment1 = comment1 + "- The system's steps to reproduce (S2R) might not have been provided!" + "\n";
+           }
+           if(OB === 0 && EB === 0 && SR !== 0 ){
+               comment1 = comment1 + "- The system's observed behavior (OB) and expected behavior(EB) might not have been provided!" + "\n";
+           }
+           if(EB === 0 && OB !== 0 && SR === 0) {
+               comment1 = comment1 + "- The system's expected behavior (EB) and steps to reproduce (S2R) might not have been provided!" + "\n";
+           } 
+           if(SR === 0 && EB !== 0 && OB === 0){
+               comment1 = comment1 + "- The system's observed behavior (OB) and steps to reproduce (S2R) might not have been provided!" + "\n";
+           }
+           if(SR === 0 && EB === 0 && OB === 0){
             comment1 = comment1 + "- The system's observed behavior (OB), expected behavior (EB), and steps to reproduce (S2R) might not have been provided!" + "\n";
-        }
-        comment1 = comment1 + "```\n";
-        comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
-    }
-    return [OB, EB, SR, comment1, comment2]
+           } 
+           comment1 = comment1 + "```\n";
+           comment1 = comment1 + "@" + username + " Can you provide this information in the bug report?";
+       }
+       return [OB, EB, SR, comment1, comment2];
+    } catch (err){
+          console.log('There was an error: ' + err);
+          throw err;
+    } finally{
+        console.log('Deleting files');
 
+        if (fs.existsSync(preOB)) {
+            fs.unlink(preOB, (err) => {
+                if (err) throw err;
+                console.log(preOB + ' was deleted');
+            });
+        }
+        if (fs.existsSync(preEB)) {
+            fs.unlink(preEB, (err) => {
+                if (err) throw err;
+                console.log(preEB + ' was deleted');
+            });
+        }
+        if (fs.existsSync(preSR)) {
+            fs.unlink(preSR, (err) => {
+                if (err) throw err;
+                console.log(preSR + ' was deleted');
+            });
+        }
+        if (fs.existsSync(fileName)) {
+            fs.unlink(fileName, (err) => {
+                if (err) throw err;
+                console.log(fileName + ' was deleted');
+            });
+        }
+    }
 }
 exports.getComments = getComments;
 
-async function getResponse(api_body){
-    const inputFile = fs.createWriteStream('input.dat', {
-        flags: 'a'
-    });
+async function writeResponse(api_body){
+    requestCounter++;
+    const fileName = "input" +  requestCounter + ".dat";
+   
+
+    console.log("Req counter: "+requestCounter);
+    
+    
+    if (fs.existsSync(fileName)) {
+           fs.unlinkSync(fileName);
+
+          /* (err) => {
+                 if (err) throw err;
+                 console.log('File was deleted: ' + fileName);
+           });*/
+    }
+
     let map = new Map();
     let gNum = 0;
-    map.set(gNum,api_title);
-    gNum = gNum + 1;
-    tokenizer.setEntry(api_body);
+
+    tokenizer.setEntry(api_body); 
     for (let i in tokenizer.getSentences()) {
         let sent = tokenizer.getSentences()[i];
+        console.log(sent);
         map.set(gNum, sent);
         gNum  = gNum + 1;
         sent = new nlp.simple.Sentence(sent);
         let t = await generateInputVector(sent);
-        inputFile.write(t);
-        inputFile.write('\n');
+        console.log(t);
+        fs.appendFileSync(fileName, t + "\n");
     }
-
-    const[arrayOB, arrayEB, arraySR ] = await Promise.all([predict_OB(), predict_EB(), predict_SR() ])
-
-    fs.unlink('predictions_OB.txt', (err) => {
-        if (err) throw err;
-        console.log('predictions_EB.txt was deleted');
-    });
-    fs.unlink('predictions_EB.txt', (err) => {
-        if (err) throw err;
-        console.log('predictions_EB.txt was deleted');
-    });
-    fs.unlink('predictions_SR.txt', (err) => {
-        if (err) throw err;
-        console.log('predictions_SR.txt was deleted');
-    });
-    fs.unlink('input.dat', (err) => {
-        if (err) throw err;
-        console.log('input.dat was deleted');
-    });
-
-    let data  = {
-        code: 200,
-        status: 'success',
-        bug_report: []
-    };
-
-    let k = 0;
-    while(k < gNum){
-        let obj_s = [];
-        if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
-            obj_s.push("OB");
-        }
-        if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
-            obj_s.push("EB");
-        }
-        if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
-            obj_s.push("SR");
-        }
-        data.bug_report[k] = {
-            text: map.get(k),
-            labels: obj_s
+    const preEB =  "prediction" + requestCounter.toString()  + "_EB.txt";
+    const preOB =  "prediction" + requestCounter.toString()  + "_OB.txt";
+    const preSR =  "prediction" + requestCounter.toString()  + "_SR.txt";
+   
+    try{
+        const[arrayOB, arrayEB, arraySR] = await Promise.all([predict_OB(preOB, fileName),predict_EB(preEB, fileName), predict_SR(preSR, fileName)]);
+        let data = {
+           code: 200,
+           status: 'success',
+           bug_report:{}
         };
-        k = k + 1;
+      
+        console.log('Prediction output: ' + arrayOB +", "+ arrayEB + ", "+arraySR);
+   
+
+        let k = 0;
+        while(k < gNum){
+           let obj_s = [];
+           if (parseFloat(arrayOB[k].replace('\n', '')) > 0) {
+               obj_s.push("OB");
+           }
+           if (parseFloat(arrayEB[k].replace('\n', '')) > 0) {
+               obj_s.push("EB");
+           }
+           if (parseFloat(arraySR[k].replace('\n', '')) > 0) {
+               obj_s.push("SR");
+           }
+           data.bug_report[k] = {
+               text: map.get(k),
+               labels: obj_s
+           };
+           k = k + 1;
+        }
+        return data;
+    
+      }catch(err){
+         console.log('There was an error: ' + err);
+         throw err;
+      }finally{
+         console.log('Deleting files');
+    
+         if (fs.existsSync(preOB)) {
+                  fs.unlink(preOB, (err) => {
+                        if (err) throw err;
+                        console.log(preOB  + ' was deleted');
+                  });
+          }
+         if (fs.existsSync(preEB)) {
+                  fs.unlink(preEB, (err) => {
+                        if (err) throw err;
+                        console.log(preEB + ' was deleted');
+                  });
+          }
+          if (fs.existsSync(preSR)) {
+                  fs.unlink(preSR, (err) => {
+                        if (err) throw err;
+                        console.log(preSR + ' was deleted');
+                  });
+          }
+          if (fs.existsSync(fileName)) {
+                  fs.unlink(fileName, (err) => {
+                        if (err) throw err;
+                        console.log(fileName + ' was deleted');
+                  });
+          }
     }
-    return data;
+   
+
 }
-exports.getResponse = getResponse;
+exports.writeResponse = writeResponse;
