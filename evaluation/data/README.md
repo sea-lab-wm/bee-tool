@@ -1,4 +1,4 @@
-You can download bug report dataset here. This is a dataset containing 5067 reports from 35 different software systems 314 (e.g., Eclipse, Firefox, Docker, Wordpress Android, OpenJPA, etc.)
+You can download bug report dataset here. This is a dataset containing 5067 reports from 35 different software systems(e.g., Eclipse, Firefox, Docker, Wordpress Android, OpenJPA, etc.)
 
 
 Statistics about the bug report data can be found here:
