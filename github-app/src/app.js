@@ -76,7 +76,14 @@ module.exports = function() {
                     ctx.response.type = 'application/json';
                     ctx.response.body = JSON.stringify(data);
                 }catch(err){
-                    ctx.throw(500);
+                    const data = {
+                        code: 500,
+                        status: 'failed',
+                        message: 'The text is null'
+                    }
+                        ctx.response.type = 'application/json';
+                        ctx.response.body = JSON.stringify(data);
+
                 }
             }
         )
