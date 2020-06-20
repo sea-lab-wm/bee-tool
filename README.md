@@ -121,7 +121,7 @@ npm start
 
 You may need to use `ngrok` to expose your app to the Internet (see <a href="https://developer.github.com/webhooks/configuring/">this article</a> from information).
 
-Note: the binary executable files for OB, EB, and S2R in ```/github-app/models``` is based on Linux(64-bit). If you want to 
+Note: the binary files for OB, EB, and S2R in ```/github-app/models``` can be executed on Linux(64-bit). If you want to 
 run it on other systems, you can download the binaries from  <a href="http://svmlight.joachims.org//">here</a>, and then train your own OB, EB, and S2R models. 
 ## Who develops BEE?
 
