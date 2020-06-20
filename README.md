@@ -121,6 +121,8 @@ npm start
 
 You may need to use `ngrok` to expose your app to the Internet (see <a href="https://developer.github.com/webhooks/configuring/">this article</a> from information).
 
+Note: the binary executable files for OB, EB, and S2R in ```/github-app/models``` is based on Linux(64-bit). If you want to 
+run it on other systems, you can download the binaries from  <a href="http://svmlight.joachims.org//">here</a>.
 ## Who develops BEE?
 
 BEE is developed by <a href="https://ysong10.github.io/">Yang Song</a> and <a href="http://ojcchar.github.io/">Oscar Chaparro</a> from the College of William & Mary.
