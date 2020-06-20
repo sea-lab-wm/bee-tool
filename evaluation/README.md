@@ -4,7 +4,7 @@ We evaluate svm models by performing 10-fold cross validation. The dataset conta
 
 We only use SMOTE to upsample train set, use validation set for SVM parameter tuning, and finaly test our models on test set.
 
-We use precision/recall to evaluate OB, EB, S2R model's performances. From   , you can see sentence classificaion result and detecting incomplete bug reports result. 
+We use precision/recall to evaluate OB, EB, S2R model performances. From <a href="https://github.com/sea-lab-wm/bee-tool/tree/master/evaluation/results">here</a>, you can see sentence classificaion results and detecting incomplete bug report result. 
 
 
 
