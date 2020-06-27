@@ -9,7 +9,7 @@ const exec = require('child_process').exec;
 const { Classifier } = require("fasttext");
 const Tokenizer = require('sentence-tokenizer');
 const tokenizer = new Tokenizer('Chuck');
-const classifier = new Classifier("../model.bin");
+const classifier = new Classifier("model/model_ticket_tagger.bin");
 const map = new Map();
 
 try {
