@@ -72,7 +72,7 @@ module.exports = function() {
             "/api",  async ctx => {
                 const api_body = ctx.request.body["text"];
                 try {
-                    const data = await classifier.getResponse(api_body);
+                    const data = await classifier.writeResponse(api_body);
                     ctx.response.type = 'application/json';
                     ctx.response.body = JSON.stringify(data);
                 }catch(err){
