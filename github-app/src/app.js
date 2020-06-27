@@ -45,7 +45,7 @@ module.exports = function() {
                     );
 
                     if (similarity > 0) {
-                        /* update label */rm
+                        /* update label */
                         await github.setLabels({ url:url, accessToken, prediction });
                     }
                     if (prediction === "bug"){
@@ -72,7 +72,7 @@ module.exports = function() {
             "/api",  async ctx => {
                 const api_body = ctx.request.body["text"];
                 try {
-                    const data = await classifier.getResponse(api_body);
+                    const data = await classifier.writeResponse(api_body);
                     ctx.response.type = 'application/json';
                     ctx.response.body = JSON.stringify(data);
                 }catch(err){
@@ -81,8 +81,10 @@ module.exports = function() {
                         status: 'failed',
                         message: 'The text is null'
                     }
-                        ctx.response.type = 'application/json';
-                        ctx.response.body = JSON.stringify(data);
+
+                     console.log(err);
+                     ctx.response.type = 'application/json';
+                     ctx.response.body = JSON.stringify(data);
 
                 }
             }

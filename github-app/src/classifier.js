@@ -9,12 +9,12 @@ const exec = require('child_process').exec;
 const { Classifier } = require("fasttext");
 const Tokenizer = require('sentence-tokenizer');
 const tokenizer = new Tokenizer('Chuck');
-const classifier = new Classifier("../model.bin");
+const classifier = new Classifier("model/model_ticket_tagger.bin");
 const map = new Map();
 
 try {
     // read contents of the file
-    const data = fs.readFileSync('../dict.txt', 'UTF-8');
+    const data = fs.readFileSync('model/dict.txt', 'UTF-8');
     // split the contents by new line
     const lines = data.split(/\r?\n/);
     // print all lines
@@ -112,7 +112,7 @@ function emptySentence(){
 
 function predict_OB(preOB, fileName) {
     return new Promise ((resolve,reject) => {
-        const command = "../svm_classify -v 1" + ' ' + fileName + ' ' + "../model_OB.txt" + ' ' + preOB;
+        const command = "model/svm_classify -v 1" + ' ' + fileName + ' ' + "model/model_OB.txt" + ' ' + preOB;
         exec(command, function(error,stdout,stderr) {
             if (!error) {
                
@@ -128,7 +128,7 @@ function predict_OB(preOB, fileName) {
 
 function predict_EB(preEB, fileName) {
     return new Promise ((resolve,reject) => {
-        const command = "../svm_classify -v 1" + ' ' + fileName + ' ' + "../model_EB.txt" + ' ' + preEB;
+        const command = "model/svm_classify -v 1" + ' ' + fileName + ' ' + "model/model_EB.txt" + ' ' + preEB;
         exec(command, function(error,stdout,stderr) {
             if (!error) {
                 const arrayEB = fs.readFileSync(preEB).toString().split("\n");
@@ -142,7 +142,7 @@ function predict_EB(preEB, fileName) {
 }
 function predict_SR(preSR, fileName) {
     return new Promise ((resolve,reject) => {
-        const command = "../svm_classify -v 1"  + ' ' + fileName + ' ' + "../model_SR.txt" + ' ' + preSR;
+        const command = "model/svm_classify -v 1"  + ' ' + fileName + ' ' + "model/model_SR.txt" + ' ' + preSR;
         exec(command, function(error,stdout,stderr) {
             if (!error) {
                 const arraySR = fs.readFileSync(preSR).toString().split("\n");
