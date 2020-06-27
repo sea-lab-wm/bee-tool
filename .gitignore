@@ -110,4 +110,4 @@ node_modules
 .DS_Store
 .idea
 bug-report-checker.private-key.pem
-
+package-lock.json
