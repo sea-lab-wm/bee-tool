@@ -33,11 +33,11 @@ A video demonstration of BEE can found <a href="https://youtu.be/8pC48f_hClw">he
 BEE is meant to help users provide better bug reports, increase the productivity of developers, and help researchers in their investigations.
 
 As a developer, you can use BEE to:
-1. help you prioritize and manage incoming issues in your software projects
+1. prioritize and manage incoming issues in your software projects
 2. check whether bug reports are complete or incomplete
 3. prompt reporters to provide the missing information when bug reports are incomplete
-4. help you easily understand and spot the main elements in bug descriptions (the OB, EB, and S2R)
-5. help you automate issue/bug report analysis or develop new tools using BEE's web API
+4. easily understand and spot the main elements in bug descriptions (the OB, EB, and S2R)
+5. automate issue/bug report analysis or develop new tools using BEE's web API
 
 As a researcher, you can use BEE's web API to investigate bug descriptions and to automate tasks that rely on them, such as bug reproduction, localization, duplicate detection, bug report quality assessment, etc.
 
@@ -71,7 +71,7 @@ The API would return a response with the sentences labeled as OB, EB, and/or S2R
 
 ## How does BEE work?
 
-BEE is implemented using <a href="https://nodejs.org/">Node.js</a>, and implements the following architecture:
+BEE is implemented using <a href="https://nodejs.org/">Node.js</a>, under the following architecture:
 <p align="center"> <img src="designs/images/architecture.png" width="900"></p>
 
 The main components of BEE are the following:
