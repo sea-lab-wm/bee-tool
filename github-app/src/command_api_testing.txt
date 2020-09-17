@@ -1,0 +1,7 @@
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{   "text":"I experienced a crash when opening the settings menu" }' \
+  http://localhost:8888/api/
+  
+  
+   http://ddf27ab5363b.ngrok.io
