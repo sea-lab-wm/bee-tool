@@ -47,10 +47,8 @@ module.exports = function() {
                     console.log("testing");                    
                     if (similarity > 0) {
                         /* update label */
-<<<<<<< HEAD
+
                         //sleep.sleep(1);
-=======
->>>>>>> c870d061eb8ff0f6972d99f574cacf74886d4e68
                         await github.setLabels({ url:url, accessToken, prediction });
                     }
                     if (prediction === "bug"){
@@ -92,16 +90,10 @@ module.exports = function() {
                         status: 'failed',
                         message: 'The text is null'
                     }
-<<<<<<< HEAD
-                      console.log(err); 
-                      ctx.response.type = 'application/json';
-                      ctx.response.body = JSON.stringify(data);
-=======
 
                      console.log(err);
                      ctx.response.type = 'application/json';
                      ctx.response.body = JSON.stringify(data);
->>>>>>> c870d061eb8ff0f6972d99f574cacf74886d4e68
 
                     //console.log("There was an error in the server: "+ err);
                     //console.log( err.stack )
