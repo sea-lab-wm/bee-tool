@@ -1,11 +1,11 @@
 "use strict";
-
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const {get, post} = require('koa-route');
 const config = require("./config");
 const github = require("./github");
 const classifier = require("./classifier");
+const api = require("./api");
 const sleep = require('sleep');
 
 module.exports = function() {
@@ -25,8 +25,8 @@ module.exports = function() {
                 ctx.assert(
                     github.verifySignature({
                         payload: JSON.stringify(ctx.request.body),//convert payload to JSON format
-                        // the registered app must have a secret set, the secret is used to authenticate as an app for requiring access token
-            	        secret: config.githubPrivateKey,
+                        // the registered app must have a secret set, the secret is used to verify that webhooks are sent by Github
+            	        secret: config.githubWebhookSecret,
             	        signature: ctx.headers["x-hub-signature"] //Every event that Github sends includes a request header called "x-hub-signature"
                     }),
                     401,
@@ -43,24 +43,29 @@ module.exports = function() {
                     const [prediction, similarity] = await classifier.predict(
                         `${title} ${body}`
                     );
-
+                   
+                    console.log("testing");                    
                     if (similarity > 0) {
-                        /* update label */rm
+                        /* update label */
+                        //sleep.sleep(1);
                         await github.setLabels({ url:url, accessToken, prediction });
                     }
                     if (prediction === "bug"){
                         const [OB, EB, SR, comment1, comment2] = await classifier.getComments(body,title,username);
+                        console.log(comment1);
+                        console.log(comment2);
                         if(OB === 0 || EB === 0 || SR === 0 ){
-                            await github.setComments1({ url: url, accessToken, comment1})
-                            sleep.sleep(1);
-                            await github.setAssignees({ url: url, accessToken,username})
-                            await github.setLabel2({ url: url, accessToken});
-                            sleep.sleep(1);
-                            await github.setComments2({ url: url, accessToken,comment2});
+                           await github.setComments1({ url: url, accessToken, comment1})
+                            sleep.sleep(1);                           
+                           await github.setAssignees({ url: url, accessToken,username})
+                           //sleep.sleep(1);
+                           await github.setLabel2({ url: url, accessToken});
+                           sleep.sleep(1);
+                           await github.setComments2({ url: url, accessToken,comment2});
                         }else{
-                            await github.setComments1({ url: url, accessToken, comment1});
-                            sleep.sleep(1);
-                            await github.setComments2({ url: url, accessToken,comment2});
+                           await github.setComments1({ url: url, accessToken, comment1});
+                           sleep.sleep(1);
+                           await github.setComments2({ url: url, accessToken,comment2});
                         }
                     }
                 }
@@ -68,27 +73,33 @@ module.exports = function() {
             })
     )
     app.use(
-        post(
-            "/api",  async ctx => {
-                const api_body = ctx.request.body["text"];
-                try {
-                    const data = await classifier.writeResponse(api_body);
-                    ctx.response.type = 'application/json';
-                    ctx.response.body = JSON.stringify(data);
-                }catch(err){
-                    const data = {
+       post(
+           "/api",  async ctx => {
+               console.log(ctx.request.body);
+               const text  = ctx.request.body["text"];
+               // console.log(api_body); 
+               try {
+                   const data = await api.writeResponse(text);
+                   //console.log(data);
+                   ctx.response.type = 'application/json';
+                   ctx.response.body = JSON.stringify(data);
+               }catch(err){
+                     const data = {
                         code: 500,
                         status: 'failed',
                         message: 'The text is null'
                     }
-                        ctx.response.type = 'application/json';
-                        ctx.response.body = JSON.stringify(data);
+                      console.log(err); 
+                      ctx.response.type = 'application/json';
+                      ctx.response.body = JSON.stringify(data);
 
-                }
-            }
-        )
+                    //console.log("There was an error in the server: "+ err);
+                    //console.log( err.stack )
+                    //ctx.throw(500);
+               }
+           })
     )
     return app;
 };
 
-   
+ 
