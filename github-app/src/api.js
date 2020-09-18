@@ -54,7 +54,7 @@ function parseSentences(text, requestCounter){
     while( k < sentences.length) {
         if (sentences[k].includes('```')) {
 			let sentTxt = setOfInsertCode[num/2]
-			if (!commons.isEmptySentence(sentTxt) && sentTxt.length < 10000){
+			if (!commons.isEmptySentence(sentTxt)){
 				modifiedSentences.push(sentTxt);
 				originalSentences.push(setOfOriginalInsertCode[num/2]);
 			}
@@ -91,14 +91,21 @@ function parseSentences(text, requestCounter){
 
 async function encode(sentences, originalSentences, requestCounter){
     console.log('encode ' + requestCounter);
+    let indexOfLongString = [];
 
     let sentVectors = [];
     for (let i in sentences) {
         let sentence = sentences[i];
         let origSentence = originalSentences[i];
+
 		try{
-			let sentVector = await commons.generateInputVector(sentence);
-			sentVectors.push(sentVector);
+		    if (originalSentences.length < 10000){
+                let sentVector = await commons.generateInputVector(sentence);
+                sentVectors.push(sentVector);
+            }
+		    else{
+		        indexOfLongString.push(i);
+            }
 		}catch(ex){
 			console.log("Error encoding sentence: \"" + sentence.toString() + "\"" );
 			console.log("Original sentence: \"" + origSentence+ "\"");
@@ -106,8 +113,7 @@ async function encode(sentences, originalSentences, requestCounter){
 			throw ex;
 		}
     }
-
-    return sentVectors;
+    return {sentVectors, indexOfLongString};
 }
 
 
@@ -142,29 +148,35 @@ function getDefaultRespose(){
 }
 
 
-function getResponse(sentences, obPrediction, ebPrediction, s2rPrediction, requestCounter){
+function getResponse(sentences, obPrediction, ebPrediction, s2rPrediction, requestCounter, indexOfLongString){
 
     console.log('getResponse '+ requestCounter);
     let response = getDefaultRespose();
 
     for (let k in sentences) {
         let sentence = sentences[k];
-        let labels = [];
-
-        if (parseFloat(obPrediction[k]) > 0) {
-            labels.push("OB");
+        if (indexOfLongString.includes(k)){
+            response.bug_report[k] = {
+                text: sentence.replace("\n", ""),
+                labels: []
+            };
         }
-        if (parseFloat(ebPrediction[k]) > 0) {
-            labels.push("EB");
+        else {
+            let labels = [];
+            if (parseFloat(obPrediction[k]) > 0) {
+                labels.push("OB");
+            }
+            if (parseFloat(ebPrediction[k]) > 0) {
+                labels.push("EB");
+            }
+            if (parseFloat(s2rPrediction[k]) > 0) {
+                labels.push("SR");
+            }
+            response.bug_report[k] = {
+                text: sentence.replace("\n", ""),
+                labels: labels
+            };
         }
-        if (parseFloat(s2rPrediction[k]) > 0) {
-            labels.push("SR");
-        }
-
-        response.bug_report[k] = {
-            text: sentence.replace("\n", ""),
-            labels: labels
-        };
     }
     return response;
 }
@@ -195,21 +207,24 @@ async function processText(text) {
     try {
         //parse the sentences
         let sentences = parseSentences(text, requestCounter);
-        if(sentences.modifiedSentences.length == 0){
+        if(sentences.modifiedSentences.length === 0){
             return getDefaultRespose();
         }
 
         //encode the sentences
-        let sentVectors = await encode(sentences.modifiedSentences, sentences.originalSentences, requestCounter);
+        let encodeResult = await encode(sentences.modifiedSentences, sentences.originalSentences, requestCounter);
+        let sentVectors = encodeResult.sentVectors;
+        let indexOfLongString = encodeResult.indexOfLongString;
         //write the sentences to a file
         let inputFile = writeVectors(sentVectors, requestCounter);
+
 
         const[obPrediction, ebPrediction, s2rPrediction] = await Promise.all([commons.predictOB(inputFile, requestCounter),
             commons.predictEB(inputFile, requestCounter),
             commons.predictSR(inputFile, requestCounter)]);
 
         //read the prediction
-        let response = getResponse(sentences.originalSentences, obPrediction, ebPrediction, s2rPrediction, requestCounter);
+        let response = getResponse(sentences.originalSentences, obPrediction, ebPrediction, s2rPrediction, requestCounter, indexOfLongString);
         return response;
     }catch(err){
         console.log('There was an error: ' + err);
