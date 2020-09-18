@@ -78,27 +78,19 @@ module.exports = function() {
            "/api",  async ctx => {
                console.log(ctx.request.body);
                const text  = ctx.request.body["text"];
-               // console.log(api_body); 
+			   let response;
                try {
-                   const data = await api.writeResponse(text);
-                   //console.log(data);
-                   ctx.response.type = 'application/json';
-                   ctx.response.body = JSON.stringify(data);
+                   response = await api.processText(text);
                }catch(err){
-                     const data = {
+                     response = {
                         code: 500,
-                        status: 'failed',
-                        message: 'The text is null'
+                        status: 'failure',
+                        message: "Unexpected error: " + err
                     }
-
-                     console.log(err);
-                     ctx.response.type = 'application/json';
-                     ctx.response.body = JSON.stringify(data);
-
-                    //console.log("There was an error in the server: "+ err);
-                    //console.log( err.stack )
-                    //ctx.throw(500);
                }
+			   
+               ctx.response.type = 'application/json';
+			   ctx.response.body = JSON.stringify(response);
            })
     )
     return app;

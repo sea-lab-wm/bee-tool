@@ -1,4 +1,6 @@
 "use strict";
+
+const nlp= require("corenlp").default;
 const { Properties, Pipeline ,ConnectorServer} = require("corenlp");
 const props = new Properties({ annotators: 'tokenize,ssplit,lemma,pos,ner' });
 const connector = new ConnectorServer({ dsn: 'http://localhost:9000' });
@@ -32,7 +34,13 @@ function readWords(){
 exports.readWords = readWords;
 
 function generateInputVector(sent) {
-    return pipeline.annotate(sent)
+	if (sent.trim() == ""){
+        throw "The sentence is empty"; 
+    }
+	
+	let sentObj = new nlp.simple.Sentence(sent)
+	
+    return pipeline.annotate(sentObj)
         .then(sent => {
             let array = [];
             let i;

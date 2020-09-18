@@ -1,5 +1,4 @@
 "use strict";
-const nlp= require("corenlp").default;
 const fs = require("fs");
 const Tokenizer = require('sentence-tokenizer');
 const tokenizer = new Tokenizer('Chuck');
@@ -8,10 +7,12 @@ const commons = require("./commons");
 
 function parseSentences(text, requestCounter){
     console.log('parseSentences '+requestCounter );
-    let sentenceObjs = []
+    
+	let modifiedSentences = []
     let originalSentences = []
-    if (text.trim() == ""){
-        return {sentenceObjs, originalSentences};
+    
+	if (text.trim() == ""){
+        return {modifiedSentences, originalSentences};
     }
 
     let sentences = text.split("\n");
@@ -47,12 +48,16 @@ function parseSentences(text, requestCounter){
         setOfInsertCode.push(insertCode);
         setOfOriginalInsertCode.push(originalInsertCode);
     }
-    let num = 0;
+    
+	let num = 0;
     let k  =  0
     while( k < sentences.length) {
         if (sentences[k].includes('```')) {
-            sentenceObjs.push(new nlp.simple.Sentence(setOfInsertCode[num/2]));
-            originalSentences.push( setOfOriginalInsertCode[num/2]);
+			let sentTxt = setOfInsertCode[num/2]
+			if (sentTxt.trim() != ""){ 
+				modifiedSentences.push(sentTxt);
+				originalSentences.push(setOfOriginalInsertCode[num/2]);
+			}
             k = k + indexOfInsertCode[num/2];
             num = num + 2;
         }else if(sentences[k] !== "") {
@@ -68,28 +73,38 @@ function parseSentences(text, requestCounter){
                 newsent = newsent.replace('#','');
                 newsent = newsent.replace('-','');
                 newsent = newsent.replace('- [ ]','');
-                sentenceObjs.push(new nlp.simple.Sentence(newsent));
-                originalSentences.push(sent);
+				
+				if (newsent.trim() != ""){ 
+					modifiedSentences.push(newsent);
+					originalSentences.push(sent);
+				}
             }
             k = k + 1;
         }
         else{
-            console.log("there is \n ");
             k = k + 1;
         }
 
     }
-    return {sentenceObjs, originalSentences};
+    return {modifiedSentences, originalSentences};
 }
 
-async function encode(sentences, requestCounter){
+async function encode(sentences, originalSentences, requestCounter){
     console.log('encode ' + requestCounter);
 
     let sentVectors = [];
     for (let i in sentences) {
         let sentence = sentences[i];
-        let sentVector = await commons.generateInputVector(sentence);
-        sentVectors.push(sentVector);
+        let origSentence = originalSentences[i];
+		try{
+			let sentVector = await commons.generateInputVector(sentence);
+			sentVectors.push(sentVector);
+		}catch(ex){
+			console.log("Error encoding sentence: " + sentence.toString());
+			console.log("Original sentence: " + origSentence);
+			console.log(ex);
+			throw ex;
+		}
     }
 
     return sentVectors;
@@ -175,17 +190,17 @@ function removeFiles(requestCounter){
 }
 
 
-async function writeResponse(text) {
+async function processText(text) {
     const requestCounter = crypto.randomBytes(20).toString('hex');
     try {
         //parse the sentences
         let sentences = parseSentences(text, requestCounter);
-        if(sentences.sentenceObjs.length == 0){
+        if(sentences.modifiedSentences.length == 0){
             return getDefaultRespose();
         }
 
         //encode the sentences
-        let sentVectors = await encode (sentences.sentenceObjs, requestCounter);
+        let sentVectors = await encode(sentences.modifiedSentences, sentences.originalSentences, requestCounter);
         //write the sentences to a file
         let inputFile = writeVectors(sentVectors, requestCounter);
 
@@ -203,4 +218,4 @@ async function writeResponse(text) {
         removeFiles(requestCounter);
     }
 }
-exports.writeResponse = writeResponse
+exports.processText = processText

@@ -14,7 +14,7 @@ const map = new Map();
 
 try {
     // read contents of the file
-    const data = fs.readFileSync('model/dict.txt', 'UTF-8');
+    const data = fs.readFileSync('../model/dict.txt', 'UTF-8');
     // split the contents by new line
     const lines = data.split(/\r?\n/);
     // print all lines
