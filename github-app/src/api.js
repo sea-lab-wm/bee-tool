@@ -11,7 +11,7 @@ function parseSentences(text, requestCounter){
 	let modifiedSentences = []
     let originalSentences = []
     
-	if (text.trim() == ""){
+	if (text.trim() === ""){
         return {modifiedSentences, originalSentences};
     }
 
@@ -44,10 +44,9 @@ function parseSentences(text, requestCounter){
         j = j + 1;
         insertCode = insertCode.replace('```', '');
         insertCode = insertCode.replace('```', '');
-        // if (originalInsertCode.length < 10000){
-        //     setOfInsertCode.push(insertCode);
-        //     setOfOriginalInsertCode.push(originalInsertCode);
-        // }
+
+        setOfInsertCode.push(insertCode);
+        setOfOriginalInsertCode.push(originalInsertCode);
     }
     
 	let num = 0;
