@@ -44,9 +44,10 @@ function parseSentences(text, requestCounter){
         j = j + 1;
         insertCode = insertCode.replace('```', '');
         insertCode = insertCode.replace('```', '');
+        if (originalInsertCode.length < 10000){
 
         setOfInsertCode.push(insertCode);
-        setOfOriginalInsertCode.push(originalInsertCode);
+        setOfOriginalInsertCode.push(originalInsertCode);}
     }
     
 	let num = 0;
