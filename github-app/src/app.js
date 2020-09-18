@@ -76,7 +76,6 @@ module.exports = function() {
     app.use(
        post(
            "/api",  async ctx => {
-               console.log(ctx.request.body);
                const text  = ctx.request.body["text"];
 			   let response;
                try {
