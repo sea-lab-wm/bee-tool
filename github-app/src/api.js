@@ -54,7 +54,7 @@ function parseSentences(text, requestCounter){
     while( k < sentences.length) {
         if (sentences[k].includes('```')) {
 			let sentTxt = setOfInsertCode[num/2]
-			if (sentTxt.trim() != ""){ 
+			if (!commons.isEmptySentence(sentTxt)){ 
 				modifiedSentences.push(sentTxt);
 				originalSentences.push(setOfOriginalInsertCode[num/2]);
 			}
@@ -74,7 +74,7 @@ function parseSentences(text, requestCounter){
                 newsent = newsent.replace('-','');
                 newsent = newsent.replace('- [ ]','');
 				
-				if (newsent.trim() != ""){ 
+				if (!commons.isEmptySentence(newsent)){ 
 					modifiedSentences.push(newsent);
 					originalSentences.push(sent);
 				}
@@ -100,8 +100,8 @@ async function encode(sentences, originalSentences, requestCounter){
 			let sentVector = await commons.generateInputVector(sentence);
 			sentVectors.push(sentVector);
 		}catch(ex){
-			console.log("Error encoding sentence: " + sentence.toString());
-			console.log("Original sentence: " + origSentence);
+			console.log("Error encoding sentence: \"" + sentence.toString() + "\"" );
+			console.log("Original sentence: \"" + origSentence+ "\"");
 			console.log(ex);
 			throw ex;
 		}

@@ -33,8 +33,13 @@ function readWords(){
 }
 exports.readWords = readWords;
 
+function isEmptySentence(sent){
+	return sent.trim() =="" || sent.trim().replace(/[\s+\u200B\u200D\uFEFF]/g, "") == "";
+}
+exports.isEmptySentence = isEmptySentence;
+
 function generateInputVector(sent) {
-	if (sent.trim() == ""){
+	if (isEmptySentence(sent)){
         throw "The sentence is empty"; 
     }
 	
