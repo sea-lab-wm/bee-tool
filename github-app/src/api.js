@@ -44,10 +44,10 @@ function parseSentences(text, requestCounter){
         j = j + 1;
         insertCode = insertCode.replace('```', '');
         insertCode = insertCode.replace('```', '');
-        if (originalInsertCode.length < 10000){
-
-        setOfInsertCode.push(insertCode);
-        setOfOriginalInsertCode.push(originalInsertCode);}
+        // if (originalInsertCode.length < 10000){
+        //     setOfInsertCode.push(insertCode);
+        //     setOfOriginalInsertCode.push(originalInsertCode);
+        // }
     }
     
 	let num = 0;
@@ -55,7 +55,7 @@ function parseSentences(text, requestCounter){
     while( k < sentences.length) {
         if (sentences[k].includes('```')) {
 			let sentTxt = setOfInsertCode[num/2]
-			if (!commons.isEmptySentence(sentTxt)){ 
+			if (!commons.isEmptySentence(sentTxt) && sentTxt.length < 10000){
 				modifiedSentences.push(sentTxt);
 				originalSentences.push(setOfOriginalInsertCode[num/2]);
 			}
