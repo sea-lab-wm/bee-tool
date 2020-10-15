@@ -226,6 +226,7 @@ if __name__ == '__main__':
                         for loss_fn in loss_fns:
 
                             conf = [lr, epoch, ngram, dim, loss_fn]
+                            print(conf)
                             try:
                                 model = fasttext.train_supervised(input=os.path.join(data_path, train_path_ft),
                                                                   thread=num_threads,
