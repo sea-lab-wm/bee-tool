@@ -1,6 +1,7 @@
 import json
 import os
 import statistics
+import traceback
 from pathlib import Path
 
 import fasttext
@@ -176,6 +177,9 @@ if __name__ == '__main__':
     num_threads = 72
     num_folds = 10
 
+    # num_threads = 12
+    # num_folds = 2
+
     Path(output_path).mkdir(parents=True, exist_ok=True)
     Path(models_path).mkdir(parents=True, exist_ok=True)
 
@@ -202,11 +206,11 @@ if __name__ == '__main__':
         dims = [50, 100]
         loss_fns = ["ns", "hs", "softmax", "ova"]
 
-        #lrs = [0.5]
-        #epochs = [50]
-        #ngrams = [3]
-        #dims = [100]
-        #loss_fns = ["softmax"]
+        # lrs = [0.5]
+        # epochs = [50]
+        # ngrams = [3]
+        # dims = [100]
+        # loss_fns = ["softmax"]
 
         # models_results = {}
         best_result = {
@@ -220,26 +224,31 @@ if __name__ == '__main__':
                 for ngram in ngrams:
                     for dim in dims:
                         for loss_fn in loss_fns:
-                            model = fasttext.train_supervised(input=os.path.join(data_path, train_path_ft),
-                                                              thread=num_threads,
-                                                              lr=lr, epoch=epoch, wordNgrams=ngram, dim=dim,
-                                                              loss=loss_fn)
-                            predictions = list(map(lambda x: (x, model.predict(x["prep_text"])), valid_sentences))
-                            ob_metrics, eb_metrics, s2r_metrics = compute_metrics(predictions, False)
-                            aggr_metrics, _ = get_overall_aggregate_metrics([ob_metrics, eb_metrics, s2r_metrics])
 
-                            # models_results[tuple(conf)] = model_results
+                            conf = [lr, epoch, ngram, dim, loss_fn]
+                            try:
+                                model = fasttext.train_supervised(input=os.path.join(data_path, train_path_ft),
+                                                                  thread=num_threads,
+                                                                  lr=lr, epoch=epoch, wordNgrams=ngram, dim=dim,
+                                                                  loss=loss_fn)
+                                predictions = list(map(lambda x: (x, model.predict(x["prep_text"])), valid_sentences))
+                                ob_metrics, eb_metrics, s2r_metrics = compute_metrics(predictions, False)
+                                aggr_metrics, _ = get_overall_aggregate_metrics([ob_metrics, eb_metrics, s2r_metrics])
 
-                            if aggr_metrics["overall"]["f1"] > best_result["aggr_metrics"]["overall"]["f1"]:
-                                conf = [lr, epoch, ngram, dim, loss_fn]
-                                model_results = {
-                                    "conf": conf,
-                                    "model": model,
-                                    "metrics": [ob_metrics, eb_metrics, s2r_metrics],
-                                    "aggr_metrics": aggr_metrics
-                                }
-                                best_result = model_results
-                                # print("new best", best_conf, best_result["aggr_metrics"])
+                                # models_results[tuple(conf)] = model_results
+
+                                if aggr_metrics["overall"]["f1"] > best_result["aggr_metrics"]["overall"]["f1"]:
+                                    model_results = {
+                                        "conf": conf,
+                                        "model": model,
+                                        "metrics": [ob_metrics, eb_metrics, s2r_metrics],
+                                        "aggr_metrics": aggr_metrics
+                                    }
+                                    best_result = model_results
+                                    # print("new best", best_conf, best_result["aggr_metrics"])
+                            except Exception as e:
+                                print(f"Error for fold={fold} and conf {conf}: {e}")
+                                traceback.print_exc()
 
         print("best", best_result["aggr_metrics"])
 
