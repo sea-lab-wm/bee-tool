@@ -8,6 +8,7 @@ import pandas
 
 import utils
 
+from numpy.ma import arange
 
 def initilize_metrics(metrics, system):
     metrics[system] = {
@@ -172,8 +173,8 @@ if __name__ == '__main__':
     output_path = "results"
     models_path = "models"
 
-    num_threads = 12
-    num_folds = 1
+    num_threads = 72
+    num_folds = 10
 
     Path(output_path).mkdir(parents=True, exist_ok=True)
     Path(models_path).mkdir(parents=True, exist_ok=True)
@@ -195,17 +196,17 @@ if __name__ == '__main__':
         valid_sentences = utils.read_json_line_by_line(os.path.join(data_path, valid_path))
         test_sentences = utils.read_json_line_by_line(os.path.join(data_path, test_path))
 
-        # lrs = arange(0.1, 1, 0.2)
-        # epochs = [10, 50, 100]
-        # ngrams = [1, 3, 5]
-        # dims = [50, 100, 150]
-        # loss_fns = ["ns", "hs", "softmax", "ova"]
+        lrs = arange(0.1, 1, 0.2)
+        epochs = [10, 50]
+        ngrams = [1, 3]
+        dims = [50, 100]
+        loss_fns = ["ns", "hs", "softmax", "ova"]
 
-        lrs = [0.5]
-        epochs = [50]
-        ngrams = [3]
-        dims = [100]
-        loss_fns = ["softmax"]
+        #lrs = [0.5]
+        #epochs = [50]
+        #ngrams = [3]
+        #dims = [100]
+        #loss_fns = ["softmax"]
 
         # models_results = {}
         best_result = {
