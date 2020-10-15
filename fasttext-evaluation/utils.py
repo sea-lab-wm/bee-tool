@@ -7,9 +7,6 @@ import os
 import pandas as pd
 from itertools import groupby
 
-github_token = "9ccbf80b6a9cb2430190f5ad6e3b360a509fd575" #ojcchar token
-#github_token = "f45b9be175c78a3433ee61d1ddfb22aaa0d1cdf1" #ysong10 token
-
 def write_json(data, file_path, pretty_printing):
     indent = -1
     if pretty_printing:
