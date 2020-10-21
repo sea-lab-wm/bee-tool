@@ -62,8 +62,8 @@ def append_to_aggreg_dict(aggregate_dic, dic):
 
 
 if __name__ == '__main__':
-    data_path = "data_split"
-    output_path = "data_split_ft_all"
+    data_path = "data_split3"
+    output_path = "data_split_ft_all3"
     num_folds = 10
 
     for k in range(num_folds):

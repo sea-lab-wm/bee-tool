@@ -62,33 +62,36 @@ def get_overall_aggregate_metrics(metric_sets):
 if __name__ == '__main__':
 
 
-    data_path = "data_split_ft_all"
-    output_path = f"results_single"
-    models_path = f"models_single"
+    data_path = "data_split_ft_all3"
+    output_path = f"results_single3"
+    models_path = f"models_single3"
 
-    # num_threads = 24
-    # num_folds = 10
-
-    num_threads = 12
+    num_threads = 24
     num_folds = 10
+
+    # num_threads = 12
+    # num_folds = 10
 
     Path(output_path).mkdir(parents=True, exist_ok=True)
     Path(models_path).mkdir(parents=True, exist_ok=True)
 
 
     lrs = [0.1, 0.3, 0.5, 0.7, 0.9]
-    epochs = [10, 50]
-    ngrams = [1, 3]
+    epochs = [10]
+    #epochs = [10, 50]
+    #ngrams = [1, 3]
+    ngrams = [1]
     dims = [50, 100]
     loss_fns = ["ns", "hs", "softmax", "ova"]
 
-    lrs = [0.5]
-    epochs = [50]
-    ngrams = [3]
-    dims = [100]
-    loss_fns = ["softmax"]
+    # lrs = [0.5]
+    # epochs = [50]
+    # ngrams = [1]
+    # dims = [100]
+    # loss_fns = ["ns"]
 
 
+    #labels = ["ob"]
     labels = ["ob", "eb", "s2r"]
 
     for label in labels:

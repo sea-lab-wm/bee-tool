@@ -88,8 +88,8 @@ def check_sets(valid_sets, test_sets):
 
 
 if __name__ == '__main__':
-    data_path = "data_prep"
-    output_path = "data_split"
+    data_path = "data_prep3"
+    output_path = "data_split3"
     num_folds = 10
 
     for file in utils.find_file("*.json.prep", data_path):

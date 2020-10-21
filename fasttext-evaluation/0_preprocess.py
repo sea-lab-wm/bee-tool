@@ -1,6 +1,8 @@
 import os
+import string
 from pathlib import Path
 
+import nltk
 import xmltodict
 from nltk import WordNetLemmatizer, word_tokenize
 
@@ -18,7 +20,7 @@ def read_files(path):
     return all_bugs
 
 
-def preprocess_text(text):
+def preprocess_text2(text):
     text = text.replace("\n", "")
 
     lemmatizer = WordNetLemmatizer()
@@ -28,7 +30,33 @@ def preprocess_text(text):
     words = word_tokenize(text)
     # porter = PorterStemmer()
     lemmas = [lemmatizer.lemmatize(word).lower() for word in words]
-    return " ".join(lemmas)
+    non_punct_lemmas = [word for word in lemmas if word not in string.punctuation]
+    if not non_punct_lemmas:
+        return None
+    return " ".join(non_punct_lemmas)
+
+
+def get_grams(tagged_words, index):
+    grams = list(map(lambda x: x[index], tagged_words))
+    for i in range(len(tagged_words) - 1):
+        grams.append("-".join([tagged_words[i][index] , tagged_words[i + 1][index]]))
+    for i in range(len(tagged_words) - 2):
+        grams.append("-".join([tagged_words[i][index] , tagged_words[i + 1][index], tagged_words[i + 2][index]]))
+    return grams
+
+
+def preprocess_text(text):
+    words = word_tokenize(text)
+    tagged = nltk.pos_tag(words)
+
+    lemmatizer = WordNetLemmatizer()
+    lemmas = [(lemmatizer.lemmatize(word[0]).lower(), word[1]) for word in tagged]
+    non_punct_lemmas = [word for word in lemmas if word[0] not in string.punctuation]
+    if not non_punct_lemmas:
+        return None
+    pos_grams = get_grams(non_punct_lemmas, 1)
+    n_grams = get_grams(non_punct_lemmas, 0)
+    return " ".join(pos_grams + n_grams)
 
 
 def pre_process(bug, system):
@@ -36,14 +64,16 @@ def pre_process(bug, system):
 
     # --------------------------------
     title = bug["bug"]["title"]
-    all_sentences.append(
-        {
-            "id": "0",
-            "text": title["#text"],
-            "prep_text": preprocess_text(title["#text"]),
-            "labels": [title["@ob"], title["@eb"], title["@sr"]]
-        }
-    )
+    prep_title = preprocess_text(title["#text"])
+    if prep_title is not None:
+        all_sentences.append(
+            {
+                "id": "0",
+                "text": title["#text"],
+                "prep_text": prep_title,
+                "labels": [title["@ob"], title["@eb"], title["@sr"]]
+            }
+        )
     # --------------------------------
 
     if "desc" in bug["bug"]:
@@ -60,14 +90,16 @@ def pre_process(bug, system):
             for sentence in sentences:
                 if "#text" not in sentence:
                     continue
-                all_sentences.append(
-                    {
-                        "id": sentence["@id"],
-                        "text": sentence["#text"],
-                        "prep_text": preprocess_text(sentence["#text"]),
-                        "labels": [sentence["@ob"], sentence["@eb"], sentence["@sr"]]
-                    }
-                )
+                prep_txt = preprocess_text(sentence["#text"])
+                if prep_txt is not None:
+                    all_sentences.append(
+                        {
+                            "id": sentence["@id"],
+                            "text": sentence["#text"],
+                            "prep_text": prep_txt,
+                            "labels": [sentence["@ob"], sentence["@eb"], sentence["@sr"]]
+                        }
+                    )
 
     return {
         "system": system,
@@ -78,7 +110,7 @@ def pre_process(bug, system):
 
 if __name__ == '__main__':
     data_path = r"C:\Users\ojcch\Documents\Repositories\projects\bee-tool\new_evaluation\data"
-    output_path = "data_prep"
+    output_path = "data_prep3"
 
     Path(output_path).mkdir(parents=True, exist_ok=True)
 
