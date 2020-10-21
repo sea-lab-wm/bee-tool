@@ -4,7 +4,7 @@ from pathlib import Path
 import utils
 
 
-def get_labels(labels):
+def get_multi_labels(labels):
     class_template = "__label__[ 0 ]"
     classes = []
 
@@ -28,6 +28,17 @@ def add_system(sentence, system):
     return sentence
 
 
+def get_label(labels, index, label):
+    class_template = "__label__[ 0 ]"
+
+    if labels[index].strip() != "":
+        classz = class_template.replace("[ 0 ]", label)
+    else:
+        classz = class_template.replace("[ 0 ]", "other")
+
+    return classz
+
+
 def get_bug_sentences(bugs, system):
     all_sentences = []
     for bug in bugs:
@@ -35,13 +46,24 @@ def get_bug_sentences(bugs, system):
 
     all_sentences = list(map(lambda x: add_system(x, system), all_sentences))
 
-    fasttext_sentences = list(map(lambda x: get_labels(x["labels"]) + " " + x["prep_text"], all_sentences))
+    fasttext_sentences = {
+        "all": list(map(lambda x: get_multi_labels(x["labels"]) + " " + x["prep_text"], all_sentences)),
+        "ob": list(map(lambda x: get_label(x["labels"], 0, "ob") + " " + x["prep_text"], all_sentences)),
+        "eb": list(map(lambda x: get_label(x["labels"], 1, "eb") + " " + x["prep_text"], all_sentences)),
+        "s2r": list(map(lambda x: get_label(x["labels"], 2, "s2r") + " " + x["prep_text"], all_sentences))
+    }
+
     return fasttext_sentences, all_sentences
+
+
+def append_to_aggreg_dict(aggregate_dic, dic):
+    for key, value in aggregate_dic.items():
+        value.extend(dic[key])
 
 
 if __name__ == '__main__':
     data_path = "data_split"
-    output_path = "data_split_ft"
+    output_path = "data_split_ft_all"
     num_folds = 10
 
     for k in range(num_folds):
@@ -58,23 +80,25 @@ if __name__ == '__main__':
                     bugs = utils.read_json_line_by_line(file)
                     ft_sentences, sentences = get_bug_sentences(bugs, sys_name)
 
-                    basename = os.path.basename(file)
-                    if basename not in fold_ft_sentences:
-                        fold_ft_sentences[basename] = []
-                    fold_ft_sentences[basename].extend(ft_sentences)
+                    fold = os.path.basename(file)
+                    if fold not in fold_ft_sentences:
+                        fold_ft_sentences[fold] = { "all" : [], "ob" : [], "eb" : [], "s2r" : []}
+                    append_to_aggreg_dict(fold_ft_sentences[fold], ft_sentences)
 
-                    if basename not in fold_sentences:
-                        fold_sentences[basename] = []
-                    fold_sentences[basename].extend(sentences)
+                    if fold not in fold_sentences:
+                        fold_sentences[fold] = []
+                    fold_sentences[fold].extend(sentences)
 
-                    utils.write_list_to_file(ft_sentences,
-                                             os.path.join(output_path, sys_name, basename + ".prep.ft"))
+                    for type, ft_sents in ft_sentences.items():
+                        utils.write_list_to_file(ft_sents,
+                                             os.path.join(output_path, sys_name, ".".join([fold, type, "prep.ft"])))
                     utils.write_json_line_by_line(sentences,
-                                             os.path.join(output_path, sys_name, basename + ".prep"))
+                                                  os.path.join(output_path, sys_name, fold + ".prep"))
 
             for fold, sentences in fold_ft_sentences.items():
-                utils.write_list_to_file(sentences,
-                                         os.path.join(output_path, fold + ".prep.ft"))
+                for type, ft_sents in sentences.items():
+                    utils.write_list_to_file(ft_sents,
+                                         os.path.join(output_path,".".join([fold, type, "prep.ft"])))
             for fold, sentences in fold_sentences.items():
                 utils.write_json_line_by_line(sentences,
-                                         os.path.join(output_path, fold + ".prep"))
+                                              os.path.join(output_path, fold + ".prep"))

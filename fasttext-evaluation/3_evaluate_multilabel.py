@@ -174,7 +174,7 @@ if __name__ == '__main__':
     output_path = "results"
     models_path = "models"
 
-    num_threads = 72
+    num_threads = 24
     num_folds = 10
 
     # num_threads = 12
@@ -200,7 +200,7 @@ if __name__ == '__main__':
         valid_sentences = utils.read_json_line_by_line(os.path.join(data_path, valid_path))
         test_sentences = utils.read_json_line_by_line(os.path.join(data_path, test_path))
 
-        lrs = arange(0.1, 1, 0.2)
+        lrs = [0.1, 0.3, 0.5, 0.7, 0.9]
         epochs = [10, 50]
         ngrams = [1, 3]
         dims = [50, 100]
@@ -259,16 +259,6 @@ if __name__ == '__main__':
         ob_metrics, eb_metrics, s2r_metrics = compute_metrics(predictions, True)
 
         aggr_metrics, aggr_metrics_list = get_overall_aggregate_metrics([ob_metrics, eb_metrics, s2r_metrics])
-
-        # print(ob_metrics)
-        # print(eb_metrics)
-        # print(s2r_metrics)
-        #
-        # for key, value in aggr_metrics.items():
-        #     print(key, value)
-        #
-        # perfl = best_model.test_label(os.path.join(data_path, test_path_ft))
-        # print(perfl)
 
         write_results(convert_metrics_to_list(ob_metrics), os.path.join(output_path, f'ob_results_{fold}.csv'))
         write_results(convert_metrics_to_list(eb_metrics), os.path.join(output_path, f'eb_results_{fold}.csv'))
