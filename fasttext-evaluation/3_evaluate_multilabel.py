@@ -8,84 +8,7 @@ import fasttext
 import pandas
 
 import utils
-
-from numpy.ma import arange
-
-def initilize_metrics(metrics, system):
-    metrics[system] = {
-        "tp": 0,
-        "fp": 0,
-        "tn": 0,
-        "fn": 0
-    }
-
-
-def get_predicted_labels(label):
-    pred_labels = {label[0].replace("__label__", "")}
-    return pred_labels
-
-
-def get_grnd_trh_labels(labels):
-    grnd_trh_labels = set()
-
-    if labels[0].strip() != "":
-        grnd_trh_labels.add("ob")
-
-    if labels[1].strip() != "":
-        grnd_trh_labels.add("eb")
-
-    if labels[2].strip() != "":
-        grnd_trh_labels.add("s2r")
-
-    return grnd_trh_labels
-
-
-def increment_base_metrics(sys_metrics, label, pred_labels, grnd_trh_labels):
-    if label in pred_labels:
-        # positive
-        if label in grnd_trh_labels:
-            # true positive
-            sys_metrics["tp"] += 1
-        else:
-            # false positive
-            sys_metrics["fp"] += 1
-    else:
-        # negative
-        if label in grnd_trh_labels:
-            # false negative
-            sys_metrics["fn"] += 1
-        else:
-            # true negative
-            sys_metrics["tn"] += 1
-
-
-def compute_evaluation_metrics(metrics):
-    tp = metrics["tp"]
-    fp = metrics["fp"]
-    tn = metrics["tn"]
-    fn = metrics["fn"]
-
-    total = tp + fp + tn + fn
-    accuracy = (tp + tn) / total
-
-    positives_pred = tp + fp
-    precision = 0 if positives_pred == 0 else tp / positives_pred
-
-    positives_gt = tp + metrics["fn"]
-    recall = 0 if positives_gt == 0 else tp / positives_gt
-    f1 = statistics.harmonic_mean([precision, recall])
-
-    metrics["total"] = total
-    metrics["accuracy"] = accuracy
-    metrics["precision"] = precision
-    metrics["recall"] = recall
-    metrics["f1"] = f1
-
-
-def compute_additional_metrics(sys_metrics):
-    for _, metrics in sys_metrics.items():
-        compute_evaluation_metrics(metrics)
-
+import eval_commons as eval
 
 def compute_metrics(predictions, by_system):
     ob_metrics = {}
@@ -94,16 +17,16 @@ def compute_metrics(predictions, by_system):
 
     overall = "overall"
     if overall not in ob_metrics:
-        initilize_metrics(ob_metrics, overall)
+        eval.initilize_metrics(ob_metrics, overall)
     if overall not in eb_metrics:
-        initilize_metrics(eb_metrics, overall)
+        eval.initilize_metrics(eb_metrics, overall)
     if overall not in s2r_metrics:
-        initilize_metrics(s2r_metrics, overall)
+        eval.initilize_metrics(s2r_metrics, overall)
 
     for pred in predictions:
 
-        grnd_trh_labels = get_grnd_trh_labels(pred[0]["labels"])
-        pred_labels = get_predicted_labels(pred[1][0])
+        grnd_trh_labels = eval.get_grnd_trh_labels(pred[0]["labels"])
+        pred_labels = eval.get_predicted_labels(pred[1][0])
 
         # --------------------------
 
@@ -111,24 +34,24 @@ def compute_metrics(predictions, by_system):
             system = pred[0]["system"]
 
             if system not in ob_metrics:
-                initilize_metrics(ob_metrics, system)
-            increment_base_metrics(ob_metrics[system], "ob", pred_labels, grnd_trh_labels)
+                eval.initilize_metrics(ob_metrics, system)
+            eval.increment_base_metrics(ob_metrics[system], "ob", pred_labels, grnd_trh_labels)
 
             if system not in eb_metrics:
-                initilize_metrics(eb_metrics, system)
-            increment_base_metrics(eb_metrics[system], "eb", pred_labels, grnd_trh_labels)
+                eval.initilize_metrics(eb_metrics, system)
+            eval.increment_base_metrics(eb_metrics[system], "eb", pred_labels, grnd_trh_labels)
 
             if system not in s2r_metrics:
-                initilize_metrics(s2r_metrics, system)
-            increment_base_metrics(s2r_metrics[system], "s2r", pred_labels, grnd_trh_labels)
+                eval.initilize_metrics(s2r_metrics, system)
+            eval.increment_base_metrics(s2r_metrics[system], "s2r", pred_labels, grnd_trh_labels)
 
-        increment_base_metrics(ob_metrics[overall], "ob", pred_labels, grnd_trh_labels)
-        increment_base_metrics(eb_metrics[overall], "eb", pred_labels, grnd_trh_labels)
-        increment_base_metrics(s2r_metrics[overall], "s2r", pred_labels, grnd_trh_labels)
+        eval.increment_base_metrics(ob_metrics[overall], "ob", pred_labels, grnd_trh_labels)
+        eval.increment_base_metrics(eb_metrics[overall], "eb", pred_labels, grnd_trh_labels)
+        eval.increment_base_metrics(s2r_metrics[overall], "s2r", pred_labels, grnd_trh_labels)
 
-    compute_additional_metrics(ob_metrics)
-    compute_additional_metrics(eb_metrics)
-    compute_additional_metrics(s2r_metrics)
+    eval.compute_additional_metrics(ob_metrics)
+    eval.compute_additional_metrics(eb_metrics)
+    eval.compute_additional_metrics(s2r_metrics)
 
     return ob_metrics, eb_metrics, s2r_metrics
 
@@ -150,29 +73,17 @@ def get_overall_aggregate_metrics(metric_sets):
             aggr_metrics[system]["tn"] += metrics["tn"]
             aggr_metrics[system]["fn"] += metrics["fn"]
 
-    compute_additional_metrics(aggr_metrics)
+    eval.compute_additional_metrics(aggr_metrics)
 
-    aggr_metrics_list = convert_metrics_to_list(aggr_metrics)
+    aggr_metrics_list = eval.convert_metrics_to_list(aggr_metrics)
     return aggr_metrics, aggr_metrics_list
-
-
-def convert_metrics_to_list(metrics):
-    aggr_metrics_list = []
-    for key, value in metrics.items():
-        value["system"] = key
-        aggr_metrics_list.append(value)
-    return aggr_metrics_list
-
-
-def write_results(data_list, path):
-    pandas.read_json(json.dumps(data_list)).to_csv(path, index=False, sep=";")
 
 
 if __name__ == '__main__':
 
     data_path = "data_split_ft"
-    output_path = "results"
-    models_path = "models"
+    output_path = "results_multilabel"
+    models_path = "models_multilabel"
 
     num_threads = 24
     num_folds = 10
@@ -260,10 +171,10 @@ if __name__ == '__main__':
 
         aggr_metrics, aggr_metrics_list = get_overall_aggregate_metrics([ob_metrics, eb_metrics, s2r_metrics])
 
-        write_results(convert_metrics_to_list(ob_metrics), os.path.join(output_path, f'ob_results_{fold}.csv'))
-        write_results(convert_metrics_to_list(eb_metrics), os.path.join(output_path, f'eb_results_{fold}.csv'))
-        write_results(convert_metrics_to_list(s2r_metrics), os.path.join(output_path, f's2r_results_{fold}.csv'))
-        write_results(aggr_metrics_list, os.path.join(output_path, f'all_results_{fold}.csv'))
+        eval.write_results(eval.convert_metrics_to_list(ob_metrics), os.path.join(output_path, f'ob_results_{fold}.csv'))
+        eval.write_results(eval.convert_metrics_to_list(eb_metrics), os.path.join(output_path, f'eb_results_{fold}.csv'))
+        eval.write_results(eval.convert_metrics_to_list(s2r_metrics), os.path.join(output_path, f's2r_results_{fold}.csv'))
+        eval.write_results(aggr_metrics_list, os.path.join(output_path, f'all_results_{fold}.csv'))
 
         fold_results.append([ob_metrics, eb_metrics, s2r_metrics])
         fold_confs.append(best_result)
@@ -284,7 +195,7 @@ if __name__ == '__main__':
 
     aggr_metrics, aggr_metrics_list = get_overall_aggregate_metrics([all_ob_results, all_eb_results, all_s2r_results])
 
-    write_results(all_ob_results_list, os.path.join(output_path, f'ob_results.csv'))
-    write_results(all_eb_results_list, os.path.join(output_path, f'eb_results.csv'))
-    write_results(all_s2r_results_list, os.path.join(output_path, f's2r_results.csv'))
-    write_results(aggr_metrics_list, os.path.join(output_path, f'all_results.csv'))
+    eval.write_results(all_ob_results_list, os.path.join(output_path, f'ob_results.csv'))
+    eval.write_results(all_eb_results_list, os.path.join(output_path, f'eb_results.csv'))
+    eval.write_results(all_s2r_results_list, os.path.join(output_path, f's2r_results.csv'))
+    eval.write_results(aggr_metrics_list, os.path.join(output_path, f'all_results.csv'))
