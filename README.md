@@ -24,7 +24,7 @@ BEE provides three main features:
 BEE can be installed as an GitHub app on any GitHub repository.
 BEE also offers a public web API for identification of the OB, EB, and S2R in any piece of text
 
-A video demonstration of BEE can found <a href="https://youtu.be/8pC48f_hClw">here</a>.
+A video demonstration of BEE can found <a href="https://youtu.be/W3_YqsfeAUo">here</a>.
 
 <p align="center"> <img src="designs/images/bee-tool.gif" width="900"></p>
 
