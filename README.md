@@ -2,7 +2,7 @@
 <p align="center"> <img src= "designs/icons/bee-name.PNG" width="300"></p>
 
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-darkgreen.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Install App](https://img.shields.io/badge/GitHub%20App-Install-blueviolet?logo=github)](https://github.com/apps/bee-tool)
 
 ## What is BEE?
