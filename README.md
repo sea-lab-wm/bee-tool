@@ -125,9 +125,8 @@ Note: the binary files for OB, EB, and S2R in ```/github-app/models``` can be ex
 run it on other systems, you can download the binaries from  <a href="http://svmlight.joachims.org//">here</a>, and then train your own OB, EB, and S2R models. 
 
 ## License
-
+```
 BEE is an open-source GitHub app that analyzes the issues that users submit to GitHub repositories.
-
 Copyright (C) 2020 Yang Song, Oscar Chaparro
 
 This program is free software: you can redistribute it and/or modify
@@ -142,7 +141,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+```
 ## Who develops BEE?
 
 BEE is developed by <a href="https://ysong10.github.io/">Yang Song</a> and <a href="http://ojcchar.github.io/">Oscar Chaparro</a> from the College of William & Mary.
