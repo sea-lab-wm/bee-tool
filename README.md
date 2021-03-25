@@ -142,6 +142,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
+## Reference Work
+* <a href="https://github.com/rafaelkallis/ticket-tagger">Ticket Tagger</a> by Rafael Kallis
+
 ## Who develops BEE?
 
 BEE is developed by <a href="https://ysong10.github.io/">Yang Song</a> and <a href="http://ojcchar.github.io/">Oscar Chaparro</a> from the College of William & Mary.
