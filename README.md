@@ -88,7 +88,8 @@ We are more than happy to receive your contributions (any kind of contributions)
 ## How do I customize and run BEE on my server?
 
 First, fork the repository and make sure you:
- - install nodejs-v8.3.x. and npm to compile/install dependencies
+ - use **java 8**
+ - install **nodejs-v8.3.x**. and npm to compile/install dependencies
  - create and register a Github App of your own and install it in your repositories
 
 After cloning the forked repo, create a .env file in the src folder and set the right environment variables as described  <a href="https://developer.github.com/apps/building-github-apps/">here</a>. This is the format of the file:
