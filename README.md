@@ -45,7 +45,7 @@ As a researcher, you can use BEE's web API to investigate bug descriptions and t
 
 Using BEE is simple. All you need to do is adding BEE to your GitHub repositories by following <a href="https://github.com/apps/bee-tool/">this link</a>. Once installed, BEE will analyze any incoming issue within your repositories.
 
-Besides, you can use BEE's web API in your script, app, or tool, by sending an HTTP POST request to `http://bugreportchecker.ngrok.io/api`, in the following format:
+Besides, you can use BEE's web API in your script, app, or tool, by sending an HTTP POST request to `http://rocco.cs.wm.edu:21203/api`, in the following format:
 ```json
 {
    "text":"I experienced a crash when opening the settings menu"
