@@ -92,6 +92,26 @@ module.exports = function() {
 			   ctx.response.body = JSON.stringify(response);
            })
     )
+
+    app.use(
+        post(
+            "/api_no_parsing",  async ctx => {
+                const text  = ctx.request.body["text"];
+                let response;
+                try {
+                    response = await api.processTextNoParsing(text);
+                }catch(err){
+                      response = {
+                         code: 500,
+                         status: 'failure',
+                         message: "Unexpected error: " + err
+                     }
+                }
+                
+                ctx.response.type = 'application/json';
+                ctx.response.body = JSON.stringify(response);
+            })
+     )
     return app;
 };
 

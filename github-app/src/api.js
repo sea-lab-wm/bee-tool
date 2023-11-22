@@ -223,3 +223,40 @@ async function processText(text) {
 }
 
 exports.processText = processText
+
+async function processTextNoParsing(sentenceText) {
+    const requestCounter = crypto.randomBytes(20).toString('hex');
+    try {
+        if (commons.isEmptySentence(sentenceText)) {
+            return getDefaultRespose();
+        }
+
+        //no parsing: we assume the sentenceText is a sentence
+        let modifiedSentences = [sentenceText]
+        let originalSentences = [sentenceText]
+
+        let sentences = {modifiedSentences, originalSentences}
+
+        //encode the sentences
+        let encodeResult = await encode(sentences.modifiedSentences, sentences.originalSentences, requestCounter);
+        let sentVectors = encodeResult.sentVectors;
+        let indexOfLongString = encodeResult.indexOfLongString;
+
+        //write the sentences to a file
+        let inputFile = writeVectors(sentVectors, requestCounter);
+
+        const [obPrediction, ebPrediction, s2rPrediction] = await Promise.all([commons.predictOB(inputFile, requestCounter),
+            commons.predictEB(inputFile, requestCounter),
+            commons.predictSR(inputFile, requestCounter)]);
+
+        //read the prediction
+        return getResponse(sentences.originalSentences, obPrediction, ebPrediction, s2rPrediction, requestCounter, indexOfLongString);
+    } catch (err) {
+        console.log('There was an error: ' + err);
+        throw err;
+    } finally {
+        removeFiles(requestCounter);
+    }
+}
+
+exports.processTextNoParsing = processTextNoParsing
